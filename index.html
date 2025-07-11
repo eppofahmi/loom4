@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loom4</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Left Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="header-content">
+          <div class="sidebar-toggle" id="sidebarToggle">
+            <i class="fa-brands fa-flipboard"></i>
+          </div>
+          <div class="app-logo">
+            <h1>Loom4</h1>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-section="projects">
+          <i class="fas fa-folder"></i>
+          <span>Projects</span>
+        </div>
+
+        <div class="nav-item" data-section="connect">
+          <i class="fas fa-plug"></i>
+          <span>Connect</span>
+        </div>
+
+        <div class="nav-item" data-section="artifacts">
+          <i class="fas fa-cube"></i>
+          <span>Artifacts</span>
+        </div>
+
+        <div class="nav-item" data-section="chat">
+          <i class="fas fa-comments"></i>
+          <span>Chat</span>
+        </div>
+
+        <div class="nav-section" id="recentChatSection">
+          <div class="nav-section-header">
+            <span>Recent Chat</span>
+          </div>
+          <div class="chat-list" id="chatList">
+            <!-- Chat history will be populated here -->
+          </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+          <div class="nav-item profile-item" id="profileToggle">
+            <i class="fas fa-user-circle"></i>
+            <span>My Profile</span>
+            <i class="fas fa-chevron-down" id="profileArrow"></i>
+          </div>
+
+          <div class="profile-submenu" id="profileSubmenu">
+            <div class="submenu-item" data-action="settings">
+              <i class="fas fa-cog"></i> Settings
+            </div>
+            <div class="submenu-item" data-action="contact">
+              <i class="fas fa-envelope"></i> Contact Us
+            </div>
+            <div class="submenu-item" data-action="upgrade">
+              <i class="fas fa-rocket"></i> Upgrade Plan
+            </div>
+            <div class="submenu-item" data-action="learn">
+              <i class="fas fa-question-circle"></i> Learn More
+            </div>
+            <div class="submenu-item" data-action="logout">
+              <i class="fas fa-sign-out-alt"></i> Log Out
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Projects Section -->
+      <div class="content-section active" id="projects-section">
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Projects</h2>
+            <button class="add-btn" id="addProjectBtn">
+              <i class="fas fa-plus"></i>
+              Add Project
+            </button>
+          </div>
+          <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Connect Section -->
+      <div class="content-section" id="connect-section">
+        <div class="connect-container">
+          <div class="connect-header">
+            <h1>Knowledge Base</h1>
+            <p>Connect your data sources to enhance AI conversations</p>
+          </div>
+
+          <div class="connect-grid">
+            <!-- File Connection Card -->
+            <div class="connect-card" data-connection-type="file">
+              <div class="connect-card-header">
+                <div class="connect-icon file-icon">
+                  <i class="fas fa-file-upload"></i>
+                </div>
+                <h3>Files</h3>
+              </div>
+              <p>Upload documents, PDFs, and other files</p>
+              <button class="connect-btn">Connect Files</button>
+            </div>
+
+            <!-- Web Connection Card -->
+            <div class="connect-card" data-connection-type="web">
+              <div class="connect-card-header">
+                <div class="connect-icon url-icon">
+                  <i class="fas fa-globe"></i>
+                </div>
+                <h3>Web Content</h3>
+              </div>
+              <p>Connect to websites and online resources</p>
+              <button class="connect-btn">Connect Website</button>
+            </div>
+
+            <!-- Database Connection Card -->
+            <div class="connect-card" data-connection-type="database">
+              <div class="connect-card-header">
+                <div class="connect-icon database-icon">
+                  <i class="fas fa-database"></i>
+                </div>
+                <h3>Database</h3>
+              </div>
+              <p>Connect to your SQL or NoSQL databases</p>
+              <button class="connect-btn">Connect Database</button>
+            </div>
+
+            <!-- API Connection Card -->
+            <div class="connect-card" data-connection-type="api">
+              <div class="connect-card-header">
+                <div class="connect-icon api-icon">
+                  <i class="fa-solid fa-plug"></i>
+                  <div class="api-pulse"></div>
+                </div>
+                <h3>API</h3>
+              </div>
+              <p>Connect to REST or GraphQL APIs</p>
+              <div class="api-badges">
+                <span class="api-badge rest">REST</span>
+                <span class="api-badge graphql">GraphQL</span>
+                <span class="api-badge websocket">WS</span>
+              </div>
+              <button class="connect-btn">Configure API</button>
+            </div>
+          </div>
+
+          <!-- Knowledge Sources Overview -->
+          <div class="knowledge-overview">
+            <div class="overview-header">
+              <h2>Connected Knowledge Sources</h2>
+              <div class="overview-stats">
+                <div class="stat-item">
+                  <span class="stat-number" id="totalFiles">0</span>
+                  <span class="stat-label">Files</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number" id="totalUrls">0</span>
+                  <span class="stat-label">URLs</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number" id="totalConnections">0</span>
+                  <span class="stat-label">DB</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-number" id="totalConnections">0</span>
+                  <span class="stat-label">API</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="knowledge-list" id="knowledgeList">
+              <!-- Knowledge sources will be listed here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artifacts Section -->
+      <div class="content-section" id="artifacts-section">
+        <div class="artifacts-container">
+          <h2>Your Artifacts</h2>
+          <div class="artifacts-grid" id="artifactsGrid">
+            <!-- Artifacts will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="content-section" id="chat-section">
+        <div class="chat-history-container">
+          <div class="chat-history-header">
+            <h1>Your chat history</h1>
+            <button class="new-chat-btn" id="addChatBtn">
+              <i class="fas fa-plus"></i>
+              New chat
+            </button>
+          </div>
+          <div class="chat-search-container">
+            <div class="chat-search">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search your chats..." id="chatSearchInput">
+            </div>
+          </div>
+          <div class="chat-history-list" id="chatHistoryList">
+            <!-- Chat history will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Chat View -->
+      <div class="content-section" id="active-chat-section">
+        <div class="chat-header">
+          <div class="model-selector">
+            <select id="modelSelect">
+              <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+              <option value="claude-3-haiku">Claude 3 Haiku</option>
+              <option value="claude-3-opus">Claude 3 Opus</option>
+            </select>
+          </div>
+          <button class="last-artifact-btn" id="lastArtifactBtn" title="Open last artifact">
+            <i class="fas fa-cube"></i>
+          </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="welcome-message">
+            <div class="welcome-content">
+              <h1>Hello, I'm Loom4</h1>
+              <p>I'm an AI assistant that can help you with analysis, writing, coding, math, and many other tasks.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-container">
+          <div class="chat-input">
+            <textarea id="messageInput" placeholder="How can I help you today?"></textarea>
+            <button id="sendButton" class="send-btn" disabled>
+              <i class="fas fa-arrow-up"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artifact Viewer -->
+    <div class="artifact-viewer" id="artifactViewer">
+      <div class="artifact-header">
+        <div class="artifact-info">
+          <h3 id="artifactTitle">Artifact Viewer</h3>
+          <span class="artifact-type" id="artifactType"></span>
+        </div>
+        <button class="close-artifact" id="closeArtifact">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="artifact-content" id="artifactContent">
+        <div class="no-artifact">
+          <i class="fas fa-cube"></i>
+          <p>No artifact selected</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="typing-indicator" id="typingIndicator">
+    <div class="typing-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create New Project</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Project Name</label>
+          <input type="text" id="projectName" placeholder="e.g. Marketing Campaign">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="projectDescription" placeholder="Brief project description"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Instructions</label>
+          <textarea id="projectInstructions" placeholder="Specific guidelines for this project"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Knowledge Base</label>
+          <div class="knowledge-options">
+            <div class="option-card" data-kb-type="new">
+              <i class="fas fa-plus"></i>
+              <span>Create New</span>
+            </div>
+            <div class="option-card" data-kb-type="existing">
+              <i class="fas fa-link"></i>
+              <span>Use Existing</span>
+            </div>
+          </div>
+          <select id="existingKnowledge" class="hidden">
+            <option value="">Select knowledge base</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Cancel</button>
+        <button class="btn btn-primary" id="saveProject">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connection Modal -->
+  <div class="connection-modal" id="connectionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">New Connection</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamic form will be inserted here -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Cancel</button>
+        <button class="btn btn-primary" id="confirmConnection">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="settings-modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-tabs">
+          <div class="tab active" data-tab="general">General</div>
+          <div class="tab" data-tab="profile">Profile</div>
+          <div class="tab" data-tab="about">About</div>
+        </div>
+
+        <div class="tab-content active" data-tab="general">
+          <div class="form-group">
+            <label>Language</label>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Theme</label>
+            <div class="theme-options">
+              <div class="theme-option" data-theme="light">
+                <div class="theme-preview light"></div>
+                <span>Light</span>
+              </div>
+              <div class="theme-option" data-theme="dark">
+                <div class="theme-preview dark"></div>
+                <span>Dark</span>
+              </div>
+              <div class="theme-option" data-theme="system">
+                <div class="theme-preview system"></div>
+                <span>System</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-tab="profile">
+          <div class="profile-view">
+            <div class="avatar"></div>
+            <div class="profile-info">
+              <h4 id="userName">User Name</h4>
+              <p id="userEmail">user@example.com</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-tab="about">
+          <div class="about-content">
+            <h4>About Loom4</h4>
+            <p>Version 1.0.0</p>
+            <div class="about-links">
+              <a href="#" id="termsLink">Terms of Use</a>
+              <a href="#" id="privacyLink">Privacy Policy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Rename Modal -->
+  <div class="chat-rename-modal" id="chatRenameModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Rename Chat</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Chat Name</label>
+          <input type="text" id="chatRenameInput" placeholder="Enter new chat name">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Cancel</button>
+        <button class="btn btn-primary" id="confirmChatRename">Rename</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Share Modal -->
+  <div class="chat-share-modal" id="chatShareModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Share Chat</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Share Link</label>
+          <div class="share-link-container">
+            <input type="text" id="chatShareLink" readonly>
+            <button class="btn btn-primary" id="copyChatLink">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="sharePublic" checked>
+            Make this chat publicly accessible
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
