@@ -5,11 +5,14 @@
   <!-- Meta tags for character encoding and responsive design -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loom4</title>
+  <title>Loom4 - AI Assistant</title>
   
   <!-- External CSS libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Base styles -->
   <link rel="stylesheet" href="styles.css">
+  
 </head>
 
 <body>
@@ -56,16 +59,6 @@
           <span>Chat</span>
         </div>
 
-        <!-- Recent chat history section -->
-        <div class="nav-section" id="recentChatSection">
-          <div class="nav-section-header">
-            <span>Recent Chat</span>
-          </div>
-          <!-- Dynamic chat list populated by JavaScript -->
-          <div class="chat-list" id="chatList">
-            <!-- Chat history will be populated here -->
-          </div>
-        </div>
 
         <!-- User profile section at bottom of sidebar -->
         <div class="profile-section">
@@ -202,7 +195,15 @@
       <!-- ARTIFACTS SECTION - View generated artifacts -->
       <div class="content-section" id="artifacts-section">
         <div class="artifacts-container">
-          <h2>Your Artifacts</h2>
+          <div class="section-header">
+            <h2>Your Artifacts</h2>
+            <div class="artifact-controls">
+              <button class="btn btn-secondary" id="createArtifactBtn">
+                <i class="fas fa-plus"></i>
+                Create Artifact
+              </button>
+            </div>
+          </div>
           <!-- Grid of artifact cards -->
           <div class="artifacts-grid" id="artifactsGrid">
             <!-- Artifacts will be populated here by JavaScript -->
@@ -239,17 +240,17 @@
       <div class="content-section" id="active-chat-section">
         <!-- Chat header with model selector and artifact button -->
         <div class="chat-header">
-          <div class="model-selector">
-            <select id="modelSelect">
-              <option value="claude-3-sonnet">Claude 3 Sonnet</option>
-              <option value="claude-3-haiku">Claude 3 Haiku</option>
-              <option value="claude-3-opus">Claude 3 Opus</option>
-            </select>
+          <h2>Chat with Loom4</h2>
+          <!-- Enhanced artifact controls -->
+          <div class="chat-header-controls">
+            <button class="last-artifact-btn" id="lastArtifactBtn" title="Open last artifact">
+              <i class="fas fa-cube"></i>
+              <span class="btn-text">Last Artifact</span>
+            </button>
+            <button class="artifact-panel-toggle" id="artifactPanelToggle" title="Toggle artifact panel">
+              <i class="fas fa-sidebar"></i>
+            </button>
           </div>
-          <!-- Button to open last artifact -->
-          <button class="last-artifact-btn" id="lastArtifactBtn" title="Open last artifact">
-            <i class="fas fa-cube"></i>
-          </button>
         </div>
 
         <!-- Chat messages area -->
@@ -259,6 +260,16 @@
             <div class="welcome-content">
               <h1>Hello, I'm Loom4</h1>
               <p>I'm an AI assistant that can help you with analysis, writing, coding, math, and many other tasks.</p>
+              <div class="welcome-actions">
+                <button class="btn btn-primary" onclick="document.getElementById('messageInput').focus()">
+                  <i class="fas fa-comment"></i>
+                  Start Chatting
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('artifactPanelToggle').click()">
+                  <i class="fas fa-cube"></i>
+                  View Artifacts
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -267,311 +278,847 @@
         <div class="chat-input-container">
           <div class="chat-input">
             <textarea id="messageInput" placeholder="How can I help you today?"></textarea>
-            <button id="sendButton" class="send-btn" disabled>
-              <i class="fas fa-arrow-up"></i>
-            </button>
+            <div class="input-actions">
+              <button id="createArtifactFromChatBtn" class="input-action-btn" title="Create artifact">
+                <i class="fas fa-plus-square"></i>
+              </button>
+              <button id="sendButton" class="send-btn" disabled>
+                <i class="fas fa-arrow-up"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ARTIFACT VIEWER - Side panel for viewing artifacts -->
-    <div class="artifact-viewer" id="artifactViewer">
-      <!-- Artifact header with title and close button -->
-      <div class="artifact-header">
-        <div class="artifact-info">
-          <h3 id="artifactTitle">Artifact Viewer</h3>
-          <span class="artifact-type" id="artifactType"></span>
-        </div>
-        <button class="close-artifact" id="closeArtifact">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <!-- Artifact content display area -->
-      <div class="artifact-content" id="artifactContent">
-        <div class="no-artifact">
-          <i class="fas fa-cube"></i>
-          <p>No artifact selected</p>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- PROFILE OVERLAY MENU -->
   <div class="profile-overlay" id="profileOverlay">
     <div class="profile-overlay-content">
-      <!-- Profile Header -->
       <div class="profile-overlay-header">
         <h3>Loom4 AI Assistant</h3>
-        <p id="profileUserEmail">john.doe@example.com</p>
+        <p>john.doe@example.com</p>
       </div>
-
-      <!-- Profile Info Section -->
-      <div class="profile-info-section">
-        <div class="profile-avatar-section">
-          <div class="profile-avatar-circle">
-            <span id="profileInitials">JD</span>
-          </div>
-          <div class="profile-details">
-            <h4>Personal</h4>
-            <p>Free plan</p>
-          </div>
-          <div class="profile-checkmark">
-            <i class="fas fa-check"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile Menu Items -->
       <div class="profile-menu">
-        <div class="profile-menu-item" data-action="settings">
+        <div class="profile-menu-item">
           <span>Settings</span>
         </div>
-
-        <div class="profile-menu-item" data-action="language">
-          <span>Language</span>
-          <i class="fas fa-chevron-right"></i>
+        <div class="profile-menu-item">
+          <span>Help</span>
         </div>
-
-        <div class="profile-menu-item" data-action="contact">
-          <span>Get help</span>
-        </div>
-
         <div class="profile-menu-divider"></div>
-
-        <div class="profile-menu-item" data-action="upgrade">
-          <span>Upgrade plan</span>
-        </div>
-
-        <div class="profile-menu-item" data-action="learn">
-          <span>Learn more</span>
-          <i class="fas fa-chevron-right"></i>
-        </div>
-
-        <div class="profile-menu-divider"></div>
-
-        <div class="profile-menu-item logout" data-action="logout">
+        <div class="profile-menu-item logout">
           <span>Log out</span>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Bottom Profile Section -->
-      <div class="profile-bottom-section">
-        <div class="profile-avatar-section">
-          <div class="profile-avatar-circle">
-            <span>JD</span>
-          </div>
-          <div class="profile-details">
-            <h4 id="profileUserName">John Doe</h4>
-            <p>Free plan</p>
-          </div>
-          <div class="profile-dropdown-arrow">
-            <i class="fas fa-chevron-down"></i>
-          </div>
+
+
+  <!-- CREATE ARTIFACT MODAL -->
+  <div class="modal" id="createArtifactModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create New Artifact</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="createArtifactForm">
+            <div class="form-group">
+              <label for="artifactTitle">Title *</label>
+              <input type="text" id="artifactTitle" required placeholder="Enter artifact title">
+            </div>
+            
+            <div class="form-group">
+              <label for="artifactType">Type *</label>
+              <select id="artifactType" required>
+                <option value="">Select type</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="markdown">Markdown</option>
+                <option value="text">Plain Text</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="artifactContent">Content *</label>
+              <textarea id="artifactContent" required rows="10" placeholder="Enter artifact content"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="artifactPreview">Preview Description</label>
+              <textarea id="artifactPreview" rows="3" placeholder="Brief description of the artifact"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-close">Cancel</button>
+          <button class="btn btn-primary" id="saveArtifactBtn">Create Artifact</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- LOADING INDICATOR - Shows when AI is typing -->
-  <div class="typing-indicator" id="typingIndicator">
-    <div class="typing-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-  </div>
+  <!-- Load the enhanced modular application -->
+  <script type="module">
+    // Import and initialize the enhanced app
+    // import app from './src/core/app.js'; // Temporarily disabled to prevent conflicts
+    
+    // Initialize enhanced features after app loads
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, initializing...');
+      
+      // Setup basic navigation first
+      setupBasicNavigation();
+      
+      // Setup enhanced artifact controls
+      setupEnhancedArtifactControls();
+      
+      // Setup create artifact modal
+      setupCreateArtifactModal();
+      
+      // Load sample data immediately and persistently
+      loadFallbackData();
+      
+      // Also load after a delay to ensure it persists
+      setTimeout(loadFallbackData, 1000);
+      
+      // Monitor and reload if data gets cleared
+      setInterval(() => {
+        const projectsGrid = document.getElementById('projectsGrid');
+        const artifactsGrid = document.getElementById('artifactsGrid');
+        const chatHistoryList = document.getElementById('chatHistoryList');
+        
+        if ((projectsGrid && projectsGrid.children.length === 0) ||
+            (artifactsGrid && artifactsGrid.children.length === 0) ||
+            (chatHistoryList && chatHistoryList.children.length === 0)) {
+          console.log('Sample data missing, reloading...');
+          loadFallbackData();
+        }
+      }, 2000);
+    });
 
-  <!-- MODAL DIALOGS -->
+    function setupBasicNavigation() {
+      console.log('Setting up basic navigation...');
+      
+      // Handle navigation clicks
+      const navItems = document.querySelectorAll('.nav-item[data-section]');
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const section = item.dataset.section;
+          console.log('Navigating to:', section);
+          showSection(section);
+          
+          // Update active nav item
+          navItems.forEach(nav => nav.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+
+      // Handle Add Project button
+      const addProjectBtn = document.getElementById('addProjectBtn');
+      if (addProjectBtn) {
+        addProjectBtn.addEventListener('click', () => {
+          alert('Add Project functionality would open a modal here.\n\nIn the full version, this would allow you to create new AI projects.');
+        });
+      }
+
+      // Handle New Chat button
+      const addChatBtn = document.getElementById('addChatBtn');
+      if (addChatBtn) {
+        addChatBtn.addEventListener('click', () => {
+          alert('New Chat functionality would create a new chat session.\n\nIn the full version, this would start a new conversation with the AI.');
+        });
+      }
+
+      // Handle Send button
+      const sendButton = document.getElementById('sendButton');
+      const messageInput = document.getElementById('messageInput');
+      if (sendButton && messageInput) {
+        sendButton.addEventListener('click', () => {
+          const message = messageInput.value.trim();
+          if (message) {
+            alert(`Demo: Your message "${message}" would be sent to the AI.\n\nIn the full version, this would start an AI conversation.`);
+            messageInput.value = '';
+          }
+        });
+
+        // Enable/disable send button based on input
+        messageInput.addEventListener('input', () => {
+          sendButton.disabled = !messageInput.value.trim();
+        });
+      }
+    }
+
+    function showSection(sectionName) {
+      console.log('Showing section:', sectionName);
+      
+      // Hide all sections
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Show target section
+      const targetSection = document.querySelector(`#${sectionName}-section`);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        console.log('Section shown:', sectionName);
+      } else {
+        console.error('Section not found:', sectionName);
+      }
+    }
+
+    function loadFallbackData() {
+      console.log('Loading fallback sample data...');
+      
+      // Load sample projects
+      const projectsGrid = document.getElementById('projectsGrid');
+      if (projectsGrid && projectsGrid.children.length === 0) {
+        console.log('Loading sample projects...');
+        projectsGrid.innerHTML = `
+          <div class="project-card" data-project-id="1">
+            <div class="project-header">
+              <h3>Website Redesign</h3>
+              <span class="project-status active">Active</span>
+            </div>
+            <p class="project-description">Complete redesign of company website with modern UI/UX</p>
+            <div class="project-meta">
+              <span class="project-date">Last active: 2023-05-15</span>
+              <span class="project-kb">web-design-kb</span>
+            </div>
+          </div>
+          <div class="project-card" data-project-id="2">
+            <div class="project-header">
+              <h3>Mobile App Development</h3>
+              <span class="project-status active">Active</span>
+            </div>
+            <p class="project-description">Building a cross-platform mobile app for iOS and Android</p>
+            <div class="project-meta">
+              <span class="project-date">Last active: 2023-05-10</span>
+              <span class="project-kb">mobile-dev-kb</span>
+            </div>
+          </div>
+          <div class="project-card" data-project-id="3">
+            <div class="project-header">
+              <h3>Marketing Campaign</h3>
+              <span class="project-status planned">Planned</span>
+            </div>
+            <p class="project-description">Q3 marketing campaign for new product launch</p>
+            <div class="project-meta">
+              <span class="project-date">Not started</span>
+              <span class="project-kb">marketing-kb</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Load sample artifacts
+      const artifactsGrid = document.getElementById('artifactsGrid');
+      if (artifactsGrid && artifactsGrid.children.length === 0) {
+        console.log('Loading sample artifacts...');
+        artifactsGrid.innerHTML = `
+          <div class="artifact-card" data-artifact-id="1">
+            <div class="artifact-card-header">
+              <div class="artifact-card-title">Homepage HTML</div>
+              <div class="artifact-card-type">HTML</div>
+            </div>
+            <div class="artifact-card-preview">Modern homepage with gradient design and glass morphism effects</div>
+            <div class="artifact-card-meta">
+              <span class="artifact-date">Today</span>
+              <span class="artifact-size">2.8 KB</span>
+            </div>
+          </div>
+          <div class="artifact-card" data-artifact-id="2">
+            <div class="artifact-card-header">
+              <div class="artifact-card-title">Responsive CSS Grid</div>
+              <div class="artifact-card-type">CSS</div>
+            </div>
+            <div class="artifact-card-preview">Responsive CSS grid layout with hover effects and mobile optimization</div>
+            <div class="artifact-card-meta">
+              <span class="artifact-date">1 hour ago</span>
+              <span class="artifact-size">2.1 KB</span>
+            </div>
+          </div>
+          <div class="artifact-card" data-artifact-id="3">
+            <div class="artifact-card-header">
+              <div class="artifact-card-title">React Dashboard Component</div>
+              <div class="artifact-card-type">JAVASCRIPT</div>
+            </div>
+            <div class="artifact-card-preview">Complete React dashboard component with charts, loading states, and error handling</div>
+            <div class="artifact-card-meta">
+              <span class="artifact-date">2 hours ago</span>
+              <span class="artifact-size">4.1 KB</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Load sample chat history
+      const chatHistoryList = document.getElementById('chatHistoryList');
+      if (chatHistoryList && chatHistoryList.children.length === 0) {
+        console.log('Loading sample chats...');
+        chatHistoryList.innerHTML = `
+          <div class="chat-history-item" data-chat-id="1">
+            <div class="chat-preview">
+              <h4>Website content ideas</h4>
+              <p>Can you suggest some content for our homepage?</p>
+              <span class="chat-time">1 minute ago</span>
+            </div>
+          </div>
+          <div class="chat-history-item" data-chat-id="2">
+            <div class="chat-preview">
+              <h4>Code review help</h4>
+              <p>I need help reviewing this React component</p>
+              <span class="chat-time">1 hour ago</span>
+            </div>
+          </div>
+          <div class="chat-history-item" data-chat-id="3">
+            <div class="chat-preview">
+              <h4>Meeting notes summary</h4>
+              <p>Summary of yesterday's strategy meeting</p>
+              <span class="chat-time">1 day ago</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Add click handlers for artifact cards (using event delegation)
+      const artifactsGrid = document.getElementById('artifactsGrid');
+      if (artifactsGrid) {
+        artifactsGrid.addEventListener('click', (e) => {
+          const artifactCard = e.target.closest('.artifact-card');
+          if (artifactCard) {
+            const artifactId = artifactCard.dataset.artifactId;
+            console.log('Artifact clicked:', artifactId);
+            showArtifactDemo(artifactId);
+          }
+        });
+      }
+
+      // Add click handlers for project cards
+      const projectsGrid = document.getElementById('projectsGrid');
+      if (projectsGrid) {
+        projectsGrid.addEventListener('click', (e) => {
+          const projectCard = e.target.closest('.project-card');
+          if (projectCard) {
+            const projectId = projectCard.dataset.projectId;
+            console.log('Project clicked:', projectId);
+            showProjectDemo(projectId);
+          }
+        });
+      }
+
+      // Add click handlers for chat items
+      const chatHistoryList = document.getElementById('chatHistoryList');
+      if (chatHistoryList) {
+        chatHistoryList.addEventListener('click', (e) => {
+          const chatItem = e.target.closest('.chat-history-item');
+          if (chatItem) {
+            const chatId = chatItem.dataset.chatId;
+            console.log('Chat clicked:', chatId);
+            showChatDemo(chatId);
+          }
+        });
+      }
+
+      console.log('Fallback data loaded');
+    }
+
+    function showArtifactDemo(artifactId) {
+      // Check for custom artifacts first
+      if (window.customArtifacts && window.customArtifacts[artifactId]) {
+        const artifact = window.customArtifacts[artifactId];
+        openArtifactModal(artifact);
+        return;
+      }
+      
+      const artifacts = {
+        '1': { 
+          title: 'Homepage HTML', 
+          type: 'html',
+          content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awesome Website</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header { 
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px; 
+            border-radius: 20px; 
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .content { 
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to My Website</h1>
+            <p>This is a beautiful homepage created with AI assistance</p>
+        </div>
+        <div class="content">
+            <h2>About Our Company</h2>
+            <p>We are a modern company focused on innovative solutions that help businesses grow and succeed in today's digital landscape.</p>
+        </div>
+    </div>
+</body>
+</html>`
+        },
+        '2': { 
+          title: 'Responsive CSS Grid', 
+          type: 'css',
+          content: `.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.grid-item {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.grid-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 16px;
+  }
   
-  <!-- Project creation modal -->
-  <div class="project-modal" id="projectModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Create New Project</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Project creation form fields -->
-        <div class="form-group">
-          <label>Project Name</label>
-          <input type="text" id="projectName" placeholder="e.g. Marketing Campaign">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="projectDescription" placeholder="Brief project description"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Instructions</label>
-          <textarea id="projectInstructions" placeholder="Specific guidelines for this project"></textarea>
-        </div>
-        <!-- Knowledge base selection -->
-        <div class="form-group">
-          <label>Knowledge Base</label>
-          <div class="knowledge-options">
-            <div class="option-card" data-kb-type="new">
-              <i class="fas fa-plus"></i>
-              <span>Create New</span>
-            </div>
-            <div class="option-card" data-kb-type="existing">
-              <i class="fas fa-link"></i>
-              <span>Use Existing</span>
-            </div>
+  .grid-item {
+    padding: 20px;
+  }
+}`
+        },
+        '3': { 
+          title: 'React Dashboard Component', 
+          type: 'javascript',
+          content: `import React, { useState, useEffect } from 'react';
+
+const UserDashboard = ({ userId }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(\`/api/users/\${userId}\`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const userData = await response.json();
+        setUser(userData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId]);
+
+  if (loading) {
+    return <div className="loading">Loading user data...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
+
+  if (!user) {
+    return <div className="no-data">No user data found</div>;
+  }
+
+  return (
+    <div className="user-dashboard">
+      <header className="dashboard-header">
+        <h1>Welcome, {user.name}!</h1>
+        <p>{user.email}</p>
+      </header>
+      
+      <div className="dashboard-content">
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Projects</h3>
+            <p>{user.projectCount || 0}</p>
           </div>
-          <select id="existingKnowledge" class="hidden">
-            <option value="">Select knowledge base</option>
-          </select>
+          <div className="stat-card">
+            <h3>Tasks</h3>
+            <p>{user.taskCount || 0}</p>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary close-modal">Cancel</button>
-        <button class="btn btn-primary" id="saveProject">Save Project</button>
       </div>
     </div>
-  </div>
+  );
+};
 
-  <!-- Connection setup modal -->
-  <div class="connection-modal" id="connectionModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modalTitle">New Connection</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <!-- Dynamic form will be inserted here by JavaScript -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary close-modal">Cancel</button>
-        <button class="btn btn-primary" id="confirmConnection">Connect</button>
-      </div>
-    </div>
-  </div>
+export default UserDashboard;`
+        }
+      };
 
-  <!-- Settings modal -->
-  <div class="settings-modal" id="settingsModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Settings</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Settings tabs -->
-        <div class="settings-tabs">
-          <div class="tab active" data-tab="general">General</div>
-          <div class="tab" data-tab="profile">Profile</div>
-          <div class="tab" data-tab="about">About</div>
+      const artifact = artifacts[artifactId];
+      if (artifact) {
+        openArtifactModal(artifact);
+      }
+    }
+
+    function openArtifactModal(artifact) {
+      // Create modal overlay
+      const modal = document.createElement('div');
+      modal.className = 'artifact-modal-overlay';
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      `;
+
+      // Create modal content
+      const modalContent = document.createElement('div');
+      modalContent.className = 'artifact-modal-content';
+      modalContent.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      `;
+
+      // Create header
+      const header = document.createElement('div');
+      header.style.cssText = `
+        padding: 20px 24px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f9fafb;
+      `;
+      header.innerHTML = `
+        <div>
+          <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #111827;">${artifact.title}</h3>
+          <p style="margin: 4px 0 0 0; font-size: 0.875rem; color: #6b7280; text-transform: uppercase; font-weight: 500;">${artifact.type}</p>
         </div>
+        <button class="close-btn" style="
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+          color: #6b7280;
+          padding: 4px;
+          border-radius: 4px;
+        ">&times;</button>
+      `;
 
-        <!-- General settings tab content -->
-        <div class="tab-content active" data-tab="general">
-          <div class="form-group">
-            <label>Language</label>
-            <select id="languageSelect">
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="fr">Français</option>
-            </select>
+      // Create content area
+      const contentArea = document.createElement('div');
+      contentArea.style.cssText = `
+        flex: 1;
+        overflow: auto;
+        padding: 24px;
+      `;
+
+      if (artifact.type === 'html') {
+        // For HTML, show both preview and code
+        contentArea.innerHTML = `
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+              <button class="tab-btn active" data-tab="preview" style="
+                padding: 8px 16px;
+                border: 1px solid #d1d5db;
+                background: #3b82f6;
+                color: white;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+              ">Preview</button>
+              <button class="tab-btn" data-tab="code" style="
+                padding: 8px 16px;
+                border: 1px solid #d1d5db;
+                background: white;
+                color: #374151;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+              ">Code</button>
+            </div>
+            <div class="tab-content preview-tab" style="display: block;">
+              <iframe style="width: 100%; height: 400px; border: 1px solid #e5e7eb; border-radius: 8px;" srcdoc="${artifact.content.replace(/"/g, '&quot;')}"></iframe>
+            </div>
+            <div class="tab-content code-tab" style="display: none;">
+              <pre style="
+                background: #f3f4f6;
+                padding: 16px;
+                border-radius: 8px;
+                overflow-x: auto;
+                font-family: 'Monaco', 'Courier New', monospace;
+                font-size: 13px;
+                line-height: 1.5;
+                margin: 0;
+              "><code>${artifact.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+            </div>
           </div>
-          <!-- Theme selection -->
-          <div class="form-group">
-            <label>Theme</label>
-            <div class="theme-options">
-              <div class="theme-option" data-theme="light">
-                <div class="theme-preview light"></div>
-                <span>Light</span>
+        `;
+      } else {
+        // For CSS and JS, show just the code
+        contentArea.innerHTML = `
+          <pre style="
+            background: #f3f4f6;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+            max-height: 500px;
+            overflow-y: auto;
+          "><code>${artifact.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+        `;
+      }
+
+      // Assemble modal
+      modalContent.appendChild(header);
+      modalContent.appendChild(contentArea);
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+
+      // Add event listeners
+      const closeBtn = header.querySelector('.close-btn');
+      closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+
+      // Tab switching for HTML artifacts
+      const tabBtns = contentArea.querySelectorAll('.tab-btn');
+      const tabContents = contentArea.querySelectorAll('.tab-content');
+      
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          
+          // Update buttons
+          tabBtns.forEach(b => {
+            b.classList.remove('active');
+            b.style.background = 'white';
+            b.style.color = '#374151';
+          });
+          btn.classList.add('active');
+          btn.style.background = '#3b82f6';
+          btn.style.color = 'white';
+          
+          // Update content
+          tabContents.forEach(content => {
+            content.style.display = 'none';
+          });
+          const targetContent = contentArea.querySelector(`.${tab}-tab`);
+          if (targetContent) {
+            targetContent.style.display = 'block';
+          }
+        });
+      });
+    }
+
+    function showProjectDemo(projectId) {
+      const projects = {
+        '1': { title: 'Website Redesign', description: 'Complete redesign of company website with modern UI/UX' },
+        '2': { title: 'Mobile App Development', description: 'Building a cross-platform mobile app for iOS and Android' },
+        '3': { title: 'Marketing Campaign', description: 'Q3 marketing campaign for new product launch' }
+      };
+
+      const project = projects[projectId];
+      if (project) {
+        alert(`Project: ${project.title}\n\n${project.description}\n\nIn the full version, this would open the project workspace with AI tools, knowledge base, and collaboration features.`);
+      }
+    }
+
+    function showChatDemo(chatId) {
+      const chats = {
+        '1': { title: 'Website content ideas', lastMessage: 'Can you suggest some content for our homepage?' },
+        '2': { title: 'Code review help', lastMessage: 'I need help reviewing this React component' },
+        '3': { title: 'Meeting notes summary', lastMessage: 'Summary of yesterday\'s strategy meeting' }
+      };
+
+      const chat = chats[chatId];
+      if (chat) {
+        // Switch to active chat view
+        showSection('active-chat');
+        alert(`Opening chat: ${chat.title}\n\nLast message: ${chat.lastMessage}\n\nIn the full version, this would load the complete chat history and allow you to continue the conversation.`);
+      }
+    }
+
+    function setupEnhancedArtifactControls() {
+      // Artifact panel toggle
+      const artifactPanelToggle = document.getElementById('artifactPanelToggle');
+      if (artifactPanelToggle) {
+        artifactPanelToggle.addEventListener('click', () => {
+          alert('Artifact panel would toggle here.\n\nIn the full version, this opens the resizable artifact sidebar.');
+        });
+      }
+
+      // Create artifact from chat
+      const createFromChatBtn = document.getElementById('createArtifactFromChatBtn');
+      if (createFromChatBtn) {
+        createFromChatBtn.addEventListener('click', () => {
+          const modal = document.getElementById('createArtifactModal');
+          modal.style.display = 'flex';
+        });
+      }
+
+      // Create artifact button
+      const createArtifactBtn = document.getElementById('createArtifactBtn');
+      if (createArtifactBtn) {
+        createArtifactBtn.addEventListener('click', () => {
+          const modal = document.getElementById('createArtifactModal');
+          modal.style.display = 'flex';
+        });
+      }
+    }
+
+    function setupCreateArtifactModal() {
+      const modal = document.getElementById('createArtifactModal');
+      const saveBtn = document.getElementById('saveArtifactBtn');
+      const form = document.getElementById('createArtifactForm');
+
+      // Close modal handlers
+      modal.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modal.style.display = 'none';
+          form.reset();
+        });
+      });
+
+      // Save artifact
+      saveBtn.addEventListener('click', () => {
+        if (form.checkValidity()) {
+          const title = document.getElementById('artifactTitle').value;
+          const type = document.getElementById('artifactType').value;
+          const content = document.getElementById('artifactContent').value;
+          const preview = document.getElementById('artifactPreview').value || 'Custom artifact';
+          
+          // Create new artifact and add to grid
+          const artifactsGrid = document.getElementById('artifactsGrid');
+          if (artifactsGrid) {
+            const newArtifactId = Date.now().toString();
+            const newArtifactCard = document.createElement('div');
+            newArtifactCard.className = 'artifact-card';
+            newArtifactCard.dataset.artifactId = newArtifactId;
+            newArtifactCard.innerHTML = `
+              <div class="artifact-card-header">
+                <div class="artifact-card-title">${title}</div>
+                <div class="artifact-card-type">${type.toUpperCase()}</div>
               </div>
-              <div class="theme-option" data-theme="dark">
-                <div class="theme-preview dark"></div>
-                <span>Dark</span>
+              <div class="artifact-card-preview">${preview}</div>
+              <div class="artifact-card-meta">
+                <span class="artifact-date">Just now</span>
+                <span class="artifact-size">Custom</span>
               </div>
-              <div class="theme-option" data-theme="system">
-                <div class="theme-preview system"></div>
-                <span>System</span>
-              </div>
-            </div>
-          </div>
-        </div>
+            `;
+            
+            // Add to the beginning of the grid
+            artifactsGrid.insertBefore(newArtifactCard, artifactsGrid.firstChild);
+            
+            // Store the artifact data for later viewing
+            window.customArtifacts = window.customArtifacts || {};
+            window.customArtifacts[newArtifactId] = { title, type, content, preview };
+          }
+          
+          modal.style.display = 'none';
+          form.reset();
+          alert(`Artifact "${title}" created successfully!`);
+        } else {
+          form.reportValidity();
+        }
+      });
 
-        <!-- Profile tab content -->
-        <div class="tab-content" data-tab="profile">
-          <div class="profile-view">
-            <div class="avatar"></div>
-            <div class="profile-info">
-              <h4 id="userName">User Name</h4>
-              <p id="userEmail">user@example.com</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- About tab content -->
-        <div class="tab-content" data-tab="about">
-          <div class="about-content">
-            <h4>About Loom4</h4>
-            <p>Version 1.0.0</p>
-            <div class="about-links">
-              <a href="#" id="termsLink">Terms of Use</a>
-              <a href="#" id="privacyLink">Privacy Policy</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat rename modal -->
-  <div class="chat-rename-modal" id="chatRenameModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Rename Chat</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Chat Name</label>
-          <input type="text" id="chatRenameInput" placeholder="Enter new chat name">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary close-modal">Cancel</button>
-        <button class="btn btn-primary" id="confirmChatRename">Rename</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat share modal -->
-  <div class="chat-share-modal" id="chatShareModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Share Chat</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Share link generation -->
-        <div class="form-group">
-          <label>Share Link</label>
-          <div class="share-link-container">
-            <input type="text" id="chatShareLink" readonly>
-            <button class="btn btn-primary" id="copyChatLink">
-              <i class="fas fa-copy"></i> Copy
-            </button>
-          </div>
-        </div>
-        <!-- Public sharing option -->
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="sharePublic" checked>
-            Make this chat publicly accessible
-          </label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary close-modal">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JavaScript file -->
-  <script src="script.js"></script>
+      // Modal backdrop click to close
+      modal.querySelector('.modal-backdrop').addEventListener('click', () => {
+        modal.style.display = 'none';
+        form.reset();
+      });
+    }
+  </script>
 </body>
 
 </html>
