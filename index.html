@@ -36,17 +36,16 @@
       --radius-lg: 0.75rem;
       --radius-xl: 1rem;
       
-      --spacing-1: 0.25rem;
-      --spacing-2: 0.5rem;
-      --spacing-3: 0.75rem;
-      --spacing-4: 1rem;
-      --spacing-6: 1.5rem;
-      --spacing-8: 2rem;
-      --spacing-12: 3rem;
+      --spacing-1: 0.2rem;
+      --spacing-2: 0.4rem;
+      --spacing-3: 0.6rem;
+      --spacing-4: 0.8rem;
+      --spacing-6: 1.2rem;
+      --spacing-8: 1.6rem;
+      --spacing-12: 2.4rem;
       
       --transition: all 0.2s ease;
       --sidebar-width: 280px;
-      --sidebar-width-minimized: 60px;
     }
 
     /* =================
@@ -343,66 +342,7 @@
       margin: 0;
     }
 
-    .sidebar-toggle {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      padding: var(--spacing-2);
-      border-radius: var(--radius-md);
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-    }
 
-    .sidebar-toggle:hover {
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-    }
-
-    /* Minimized Sidebar State */
-    .sidebar.minimized {
-      width: 60px;
-      transition: width 0.3s ease;
-    }
-
-    .sidebar.minimized .app-logo h1,
-    .sidebar.minimized .nav-item span,
-    .sidebar.minimized .profile-info {
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease, visibility 0.2s ease;
-    }
-
-    .sidebar.minimized .nav-item {
-      justify-content: center;
-      padding: var(--spacing-3);
-    }
-
-    .sidebar.minimized .profile-button {
-      justify-content: center;
-      padding: var(--spacing-3);
-    }
-
-    .sidebar.minimized .profile-avatar {
-      margin: 0;
-    }
-
-    .sidebar.minimized .profile-arrow {
-      display: none;
-    }
-
-    .sidebar.minimized .sidebar-toggle i {
-      transform: rotate(180deg);
-    }
-
-    /* Expand button when minimized */
-    .sidebar.minimized .sidebar-toggle {
-      margin: 0 auto;
-    }
 
     .sidebar-nav {
       flex: 1;
@@ -441,79 +381,332 @@
       font-weight: 500;
     }
 
-    /* =================
-       PROFILE SECTION
-       ================= */
-    .sidebar-profile {
-      margin-top: auto;
-      padding: var(--spacing-4);
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-section-divider {
+      margin: var(--spacing-4) var(--spacing-4) var(--spacing-3) var(--spacing-4);
+      padding-top: var(--spacing-3);
       border-top: 1px solid var(--border-light);
     }
 
-    .profile-button {
+    .nav-section-divider span {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .chat-list-section {
+      border-top: 1px solid var(--border-light);
+      margin-top: var(--spacing-4);
+      padding-top: var(--spacing-4);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-4);
+      margin-bottom: var(--spacing-3);
+      gap: var(--spacing-3);
+    }
+
+    .chat-list-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      flex: 1;
+      text-align: center;
+    }
+
+    .chat-list-header .btn {
+      padding: var(--spacing-2);
+      min-width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .recent-chat-items {
+      padding: 0 var(--spacing-4);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .chat-items-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 var(--spacing-4);
+    }
+
+    .chat-nav-item {
       display: flex;
       align-items: center;
       gap: var(--spacing-3);
-      padding: var(--spacing-3);
+      padding: var(--spacing-3) var(--spacing-4);
+      margin-bottom: var(--spacing-2);
       border-radius: var(--radius-lg);
       cursor: pointer;
       transition: var(--transition);
       user-select: none;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-light);
     }
 
-    .profile-button:hover {
+    .chat-nav-item:hover {
       background: var(--bg-tertiary);
-      border-color: var(--primary-color);
     }
 
-    .profile-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+    .chat-nav-item.active {
       background: var(--primary-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: white;
+    }
+
+    .chat-nav-item i {
+      width: 20px;
+      text-align: center;
       font-size: 1rem;
       flex-shrink: 0;
     }
 
-    .profile-info {
+    .chat-nav-item .chat-title {
       flex: 1;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-nav-item .chat-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* Chat Table Styles */
+    .chat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .chat-table th {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: var(--spacing-3) var(--spacing-4);
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .chat-table-row {
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .chat-table-row:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .chat-table-row.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .chat-table-row.active .chat-time-cell,
+    .chat-table-row.active .chat-messages-cell {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .chat-table td {
+      padding: var(--spacing-3) var(--spacing-4);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .chat-title-cell {
+      font-weight: 500;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-time-cell {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .chat-messages-cell {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    /* Chat List Panel Styles */
+    .chat-list-panel {
       display: flex;
       flex-direction: column;
-      min-width: 0;
+      height: 100%;
+      padding: var(--spacing-6);
     }
 
-    .profile-name {
-      font-weight: 500;
-      font-size: 0.875rem;
+    .chat-list-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-6);
+      padding-bottom: var(--spacing-4);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .chat-list-panel-header h2 {
+      margin: 0;
       color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 1.5rem;
+      font-weight: 600;
     }
 
-    .profile-plan {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .chat-list-controls {
+      display: flex;
+      gap: var(--spacing-3);
     }
 
-    .profile-arrow {
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-      transition: var(--transition);
+    .chat-list-table-container {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      background: var(--bg-primary);
     }
 
-    .profile-button.active .profile-arrow {
+    /* Artifact Viewer Header */
+    .artifact-viewer-header-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      padding: var(--spacing-4);
+      border-bottom: 1px solid var(--border-light);
+      background: var(--bg-secondary);
+    }
+
+    .artifact-viewer-header-info .artifact-info h3 {
+      margin: 0 0 var(--spacing-1) 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .artifact-viewer-header-info .artifact-meta {
+      display: flex;
+      gap: var(--spacing-3);
+      align-items: center;
+    }
+
+    .artifact-tabs-row {
+      display: flex;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: var(--spacing-3);
+      border-top: 1px solid var(--border-light);
+      position: relative;
+    }
+
+    .profile-menu-trigger {
+      position: relative;
+      justify-content: space-between;
+    }
+
+    .profile-chevron {
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .profile-menu-trigger.active .profile-chevron {
       transform: rotate(180deg);
     }
+
+    .profile-menu-overlay {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-2);
+      padding: var(--spacing-2);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      z-index: 1000;
+    }
+
+    .profile-menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .profile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+      padding: var(--spacing-3) var(--spacing-4);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .profile-menu-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .profile-menu-item.logout {
+      color: #ef4444;
+    }
+
+    .profile-menu-item.logout:hover {
+      background: #fef2f2;
+    }
+
+    .profile-menu-item i {
+      width: 16px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .profile-menu-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: var(--spacing-2) 0;
+    }
+
 
     /* =================
        CHAT PANEL
@@ -587,6 +780,13 @@
       width: 0;
       margin-right: -4px;
       overflow: hidden;
+    }
+
+    .artifact-controls {
+      display: flex;
+      justify-content: flex-end;
+      padding: var(--spacing-3);
+      border-bottom: 1px solid var(--border-light);
     }
 
     .artifact-header {
@@ -817,13 +1017,6 @@
       transition: left 0.3s ease;
     }
 
-    /* Adjust other sections when sidebar is minimized */
-    .sidebar.minimized ~ .chat-panel,
-    .sidebar.minimized ~ .panel-resizer,
-    .sidebar.minimized ~ .artifact-panel,
-    .sidebar.minimized ~ .other-sections {
-      margin-left: calc(var(--sidebar-width-minimized) - var(--sidebar-width));
-    }
 
     /* Hide artifact panel and resizer when other sections are shown */
     .other-sections ~ .panel-resizer,
@@ -995,113 +1188,6 @@
       padding: var(--spacing-4);
     }
 
-    /* Profile Drawer Styles */
-    .profile-drawer-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition);
-      z-index: 999;
-      pointer-events: none;
-    }
-
-    .profile-drawer-overlay.active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .profile-drawer {
-      position: fixed;
-      bottom: 100px;
-      left: 0;
-      width: var(--sidebar-width);
-      max-height: 400px;
-      background: var(--bg-primary);
-      border-right: 1px solid var(--border-light);
-      border-top: 1px solid var(--border-light);
-      border-top-right-radius: var(--radius-xl);
-      border-bottom-right-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      transform: translateY(100%);
-      transition: transform var(--transition);
-      z-index: 1001;
-      overflow: hidden;
-    }
-
-    .profile-drawer.active {
-      transform: translateY(0);
-    }
-
-    .profile-drawer .profile-menu {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-1);
-      padding: var(--spacing-4);
-    }
-
-    .profile-menu-item {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-3);
-      padding: var(--spacing-3);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: var(--transition);
-      user-select: none;
-    }
-
-    .profile-menu-item:hover {
-      background: var(--bg-tertiary);
-    }
-
-    .profile-menu-item i {
-      width: 20px;
-      text-align: center;
-      font-size: 1rem;
-      color: var(--text-secondary);
-    }
-
-    .menu-item-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .menu-item-title {
-      font-weight: 500;
-      font-size: 0.875rem;
-      color: var(--text-primary);
-    }
-
-    .menu-item-subtitle {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    .profile-menu-separator {
-      height: 1px;
-      background: var(--border-light);
-      margin: var(--spacing-2) 0;
-    }
-
-    .profile-menu-item[data-action="logout"]:hover {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger-color);
-    }
-
-    .profile-menu-item[data-action="logout"]:hover i {
-      color: var(--danger-color);
-    }
-
-    .profile-menu-item[data-action="upgrade"] i {
-      color: #f59e0b;
-    }
 
     /* Modal Content Styles */
     .profile-picture-section {
@@ -1671,13 +1757,7 @@
         left: 0;
       }
 
-      .sidebar.minimized {
-        width: 100%;
-      }
 
-      .sidebar-toggle {
-        display: none;
-      }
 
       .chat-panel {
         min-width: unset;
@@ -1717,14 +1797,6 @@
         margin: var(--spacing-4);
       }
 
-      /* Profile drawer on mobile takes full width */
-      .profile-drawer {
-        width: 100%;
-        left: 0;
-        border-right: none;
-        bottom: 80px;
-        max-height: 350px;
-      }
     }
 
     /* =================
@@ -1755,72 +1827,80 @@
         <div class="app-logo">
           <h1>Loom4</h1>
         </div>
-        <button class="sidebar-toggle" id="sidebarToggle" title="Minimize Sidebar">
-          <i class="fas fa-chevron-left"></i>
-        </button>
       </div>
 
-      <nav class="sidebar-nav">
-        <div class="nav-item active" data-section="chat">
-          <i class="fas fa-comments"></i>
-          <span>Chat</span>
-        </div>
-        <div class="nav-item" data-section="projects">
-          <i class="fas fa-folder"></i>
-          <span>Projects</span>
-        </div>
-        <div class="nav-item" data-section="connect">
-          <i class="fas fa-plug"></i>
-          <span>Connect</span>
-        </div>
-        <div class="nav-item" data-section="artifacts">
-          <i class="fas fa-cube"></i>
-          <span>Artifacts</span>
-        </div>
-      </nav>
-
-      <!-- Chat History Section -->
-      <div class="chat-history">
-        <div class="chat-history-header">
-          <h3>Recent Chats</h3>
-          <button class="btn btn-sm" id="new-chat-btn-sidebar" title="New Chat">
-            <i class="fas fa-plus"></i>
-          </button>
-        </div>
-        <div class="chat-list">
-          <!-- Chat history will be rendered here -->
-        </div>
-      </div>
-
-      <!-- Profile Section -->
-      <div class="sidebar-profile">
-        <div class="profile-button" id="profileToggle">
-          <div class="profile-avatar">
-            <i class="fas fa-user"></i>
+      <!-- Sidebar Content Container -->
+      <div class="sidebar-content">
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-section="chat">
+            <i class="fas fa-comments"></i>
+            <span>Chat List</span>
           </div>
-          <div class="profile-info">
-            <span class="profile-name">John Doe</span>
-            <span class="profile-plan">Free Plan</span>
+          <div class="nav-item" data-section="projects">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
           </div>
-          <i class="fas fa-chevron-up profile-arrow"></i>
+          <div class="nav-item" data-section="connect">
+            <i class="fas fa-plug"></i>
+            <span>Connect</span>
+          </div>
+          <div class="nav-item" data-section="artifacts">
+            <i class="fas fa-cube"></i>
+            <span>Artifacts</span>
+          </div>
+
+          <!-- Recent Chats Section (Always Visible) -->
+          <div class="nav-section-divider">
+            <span>Recent Chats</span>
+          </div>
+          <div class="recent-chat-items" id="recent-chat-list">
+            <!-- Recent chat history will be rendered here as nav items -->
+          </div>
+        </nav>
+      </div>
+
+      <!-- Profile Section at Bottom -->
+      <div class="sidebar-footer">
+        <div class="nav-item profile-menu-trigger" id="profile-menu-trigger">
+          <i class="fas fa-user"></i>
+          <span>My Profile</span>
+          <i class="fas fa-chevron-up profile-chevron"></i>
+        </div>
+        
+        <!-- Profile Menu Overlay -->
+        <div class="profile-menu-overlay" id="profile-menu-overlay">
+          <div class="profile-menu-item" data-action="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </div>
+          <div class="profile-menu-item" data-action="language">
+            <i class="fas fa-globe"></i>
+            <span>Language</span>
+          </div>
+          <div class="profile-menu-item" data-action="help">
+            <i class="fas fa-question-circle"></i>
+            <span>Get Help</span>
+          </div>
+          <div class="profile-menu-item" data-action="upgrade">
+            <i class="fas fa-star"></i>
+            <span>Upgrade Plan</span>
+          </div>
+          <div class="profile-menu-item" data-action="learn">
+            <i class="fas fa-book"></i>
+            <span>Learn More</span>
+          </div>
+          <div class="profile-menu-divider"></div>
+          <div class="profile-menu-item logout" data-action="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+          </div>
         </div>
       </div>
+
     </div>
 
     <!-- Chat Panel -->
     <div class="chat-panel" id="chat-panel">
-      <div class="chat-header">
-        <h2>Chat with Loom4</h2>
-        <div class="chat-actions">
-          <button class="btn btn-secondary" id="new-chat-btn">
-            <i class="fas fa-plus"></i>
-            New Chat
-          </button>
-          <button class="btn btn-secondary" id="show-artifact-btn" title="Show Artifact Panel">
-            <i class="fas fa-cube"></i>
-          </button>
-        </div>
-      </div>
       
       <div class="chat-messages" id="chat-messages">
         <div class="welcome-message">
@@ -1838,6 +1918,9 @@
       <div class="chat-input-container">
         <div class="chat-input">
           <textarea id="chat-input" placeholder="How can I help you today?"></textarea>
+          <button class="btn btn-secondary" id="show-artifact-btn" title="Show Artifact Panel">
+            <i class="fas fa-cube"></i>
+          </button>
           <button class="btn btn-primary send-btn" id="send-btn" disabled>
             <i class="fas fa-arrow-up"></i>
           </button>
@@ -1850,41 +1933,10 @@
 
     <!-- Artifact Panel -->
     <div class="artifact-panel" id="artifact-panel">
-      <!-- Default state: No artifact selected -->
-      <div class="artifact-header default-header" id="artifact-default-header">
-        <h2>Artifacts</h2>
-        <div class="artifact-actions">
-          <button class="btn btn-secondary" id="create-artifact-btn">
-            <i class="fas fa-plus"></i>
-            Create
-          </button>
-          <button class="btn btn-secondary" id="close-artifact-btn" title="Close Artifact Panel">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Artifact viewer state: When artifact is selected -->
-      <div class="artifact-header viewer-header" id="artifact-viewer-header" style="display: none;">
-        <div class="artifact-info">
-          <h2 id="artifact-title">Artifact Name</h2>
-          <div class="artifact-meta">
-            <span class="artifact-type-badge" id="artifact-type">HTML</span>
-            <span class="artifact-size" id="artifact-size">2.1 KB</span>
-            <span class="artifact-date" id="artifact-date">2 hours ago</span>
-          </div>
-        </div>
-        <div class="artifact-actions">
-          <button class="btn btn-secondary" id="edit-artifact-btn" title="Edit Artifact">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn btn-secondary" id="back-to-list-btn" title="Back to List">
-            <i class="fas fa-arrow-left"></i>
-          </button>
-          <button class="btn btn-secondary" id="close-artifact-btn-viewer" title="Close Artifact Panel">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
+      <div class="artifact-controls">
+        <button class="btn btn-ghost" id="close-artifact-btn" title="Close Artifact Panel">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       
       <div class="artifact-content">
@@ -1982,56 +2034,6 @@
     </div>
   </div>
 
-  <!-- Profile Drawer -->
-  <div class="profile-drawer-overlay" id="profile-drawer-overlay"></div>
-  <div class="profile-drawer" id="profile-drawer">
-    <div class="profile-menu">
-      <div class="profile-menu-item" data-action="personal">
-        <i class="fas fa-user"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Personal</span>
-          <span class="menu-item-subtitle">Free Plan</span>
-        </div>
-      </div>
-      <div class="profile-menu-item" data-action="settings">
-        <i class="fas fa-cog"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Settings</span>
-        </div>
-      </div>
-      <div class="profile-menu-item" data-action="language">
-        <i class="fas fa-globe"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Language</span>
-        </div>
-      </div>
-      <div class="profile-menu-item" data-action="help">
-        <i class="fas fa-question-circle"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Get Help</span>
-        </div>
-      </div>
-      <div class="profile-menu-item" data-action="upgrade">
-        <i class="fas fa-crown"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Upgrade Plan</span>
-        </div>
-      </div>
-      <div class="profile-menu-item" data-action="learn">
-        <i class="fas fa-graduation-cap"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Learn More</span>
-        </div>
-      </div>
-      <div class="profile-menu-separator"></div>
-      <div class="profile-menu-item" data-action="logout">
-        <i class="fas fa-sign-out-alt"></i>
-        <div class="menu-item-content">
-          <span class="menu-item-title">Logout</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Modals -->
   
@@ -2455,7 +2457,6 @@
         const profile = localStorage.getItem('loom4_user_profile');
         if (profile) {
           const userData = JSON.parse(profile);
-          document.querySelector('.profile-name').textContent = userData.name;
           document.getElementById('user-name').value = userData.name;
           document.getElementById('user-email').value = userData.email;
         }
@@ -2509,20 +2510,37 @@
         document.getElementById('add-project-btn')?.addEventListener('click', () => this.showCreateProject());
         document.getElementById('create-artifact-btn')?.addEventListener('click', () => this.showCreateArtifact());
         document.getElementById('new-chat-btn')?.addEventListener('click', () => this.showNewChat());
-        document.getElementById('new-chat-btn-sidebar')?.addEventListener('click', () => this.showNewChat());
+        document.getElementById('new-chat-btn-header')?.addEventListener('click', () => this.showNewChat());
+        document.getElementById('search-chat-btn')?.addEventListener('click', () => this.showChatSearch());
         document.getElementById('send-btn')?.addEventListener('click', () => this.sendMessage());
         document.getElementById('save-artifact-btn')?.addEventListener('click', () => this.saveArtifact());
         
-        // Profile button
-        document.getElementById('profileToggle')?.addEventListener('click', () => this.toggleProfileDrawer());
         
         // Modal save buttons
-        document.getElementById('save-profile-btn')?.addEventListener('click', () => this.saveProfile());
         document.getElementById('save-settings-btn')?.addEventListener('click', () => this.saveSettings());
         document.getElementById('save-language-btn')?.addEventListener('click', () => this.saveLanguage());
         
         // Sidebar toggle
-        document.getElementById('sidebarToggle')?.addEventListener('click', () => this.toggleSidebar());
+        
+        // Profile menu
+        document.getElementById('profile-menu-trigger')?.addEventListener('click', () => this.toggleProfileMenu());
+        
+        // Profile menu items
+        document.querySelectorAll('.profile-menu-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            const action = e.currentTarget.dataset.action;
+            this.handleProfileMenuAction(action);
+          });
+        });
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+          const profileTrigger = document.getElementById('profile-menu-trigger');
+          const profileOverlay = document.getElementById('profile-menu-overlay');
+          if (!profileTrigger?.contains(e.target) && !profileOverlay?.contains(e.target)) {
+            this.closeProfileMenu();
+          }
+        });
         
         // Panel controls
         document.getElementById('show-artifact-btn')?.addEventListener('click', () => this.showArtifactPanel());
@@ -2551,21 +2569,6 @@
           });
         });
 
-        // Profile drawer overlay click
-        document.getElementById('profile-drawer-overlay')?.addEventListener('click', () => {
-          this.closeProfileDrawer();
-        });
-
-        // Profile menu items - use event delegation for dynamic content
-        document.addEventListener('click', (e) => {
-          const menuItem = e.target.closest('.profile-menu-item');
-          if (menuItem) {
-            e.preventDefault();
-            e.stopPropagation();
-            const action = menuItem.dataset.action;
-            this.handleProfileAction(action);
-          }
-        });
 
         // Chat input
         const chatInput = document.getElementById('chat-input');
@@ -2608,6 +2611,9 @@
             panelResizer.style.display = 'block';
           }
           
+          // Show chat list table in main panel
+          this.showChatListInPanel();
+          
           this.currentSection = sectionName;
         } else {
           // Show other sections, hide chat panels
@@ -2626,6 +2632,106 @@
         }
         
         console.log(`Switched to ${sectionName} section`);
+      }
+
+      // Show chat section without triggering chat list view (for artifact linking)
+      showChatSection() {
+        // Update navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        document.querySelector('[data-section="chat"]')?.classList.add('active');
+
+        const otherSections = document.getElementById('other-sections');
+        const chatPanel = document.getElementById('chat-panel');
+        const artifactPanel = document.getElementById('artifact-panel');
+        const panelResizer = document.getElementById('panel-resizer');
+
+        // Show chat panel layout with artifact panel
+        otherSections.style.display = 'none';
+        chatPanel.style.display = 'flex';
+        
+        // Restore artifact panel visibility
+        const artifactPanelVisible = localStorage.getItem('loom4_artifact_panel_visible');
+        if (artifactPanelVisible !== 'false') {
+          artifactPanel.style.display = 'flex';
+          panelResizer.style.display = 'block';
+        }
+        
+        this.currentSection = 'chat';
+      }
+
+      // Show chat list table in main chat panel
+      showChatListInPanel() {
+        const chatMessages = document.getElementById('chat-messages');
+        if (!chatMessages) return;
+
+        // Create chat list interface in main panel
+        chatMessages.innerHTML = `
+          <div class="chat-list-panel">
+            <div class="chat-list-panel-header">
+              <h2>All Conversations</h2>
+              <div class="chat-list-controls">
+                <button class="btn btn-secondary" id="search-chat-btn" title="Search Chats">
+                  <i class="fas fa-search"></i>
+                  Search
+                </button>
+                <button class="btn btn-primary" id="new-chat-btn-panel" title="New Chat">
+                  <i class="fas fa-plus"></i>
+                  New Chat
+                </button>
+              </div>
+            </div>
+            <div class="chat-list-table-container" id="chat-list-table-container">
+              <!-- Chat table will be rendered here -->
+            </div>
+          </div>
+        `;
+
+        // Render the chat table
+        this.renderChatTable();
+        
+        // Add event listeners for new buttons
+        document.getElementById('search-chat-btn')?.addEventListener('click', () => this.showChatSearch());
+        document.getElementById('new-chat-btn-panel')?.addEventListener('click', () => this.showNewChat());
+      }
+
+      // Render chat table in the panel
+      renderChatTable() {
+        const container = document.getElementById('chat-list-table-container');
+        if (!container) return;
+
+        if (this.data.chats.length === 0) {
+          container.innerHTML = '<div class="empty-state">No conversations yet</div>';
+          return;
+        }
+
+        container.innerHTML = `
+          <table class="chat-table">
+            <thead>
+              <tr>
+                <th>Chat Title</th>
+                <th>Last Updated</th>
+                <th>Messages</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.data.chats.map(chat => `
+                <tr class="chat-table-row ${this.currentChatId === chat.id ? 'active' : ''}" onclick="Loom4.loadChat(${chat.id})">
+                  <td class="chat-title-cell">${chat.title}</td>
+                  <td class="chat-time-cell">${this.formatDate(chat.updatedAt)}</td>
+                  <td class="chat-messages-cell">${chat.messages.length}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      showChatSearch() {
+        // TODO: Implement chat search functionality
+        console.log('Chat search clicked');
+        alert('Chat search functionality will be implemented here');
       }
 
       // Load sample data
@@ -3026,24 +3132,32 @@ export default UserDashboard;`,
         }
       }
 
-      // Render chat history in sidebar
+      // Render recent chats in sidebar
       renderChatHistory() {
-        const chatList = document.querySelector('.chat-list');
-        if (!chatList) return;
+        this.renderRecentChats();
+      }
+
+      // Render recent chats in sidebar (limited to 5)
+      renderRecentChats() {
+        const recentChatList = document.getElementById('recent-chat-list');
+        if (!recentChatList) return;
 
         if (this.data.chats.length === 0) {
-          chatList.innerHTML = '<div class="empty-state">No conversations yet</div>';
+          recentChatList.innerHTML = '<div class="empty-state">No conversations yet</div>';
           return;
         }
 
-        chatList.innerHTML = this.data.chats.map(chat => `
-          <div class="chat-item ${this.currentChatId === chat.id ? 'active' : ''}" onclick="Loom4.loadChat(${chat.id})">
+        // Show only the 5 most recent chats
+        const recentChats = this.data.chats.slice(0, 5);
+        recentChatList.innerHTML = recentChats.map(chat => `
+          <div class="chat-nav-item ${this.currentChatId === chat.id ? 'active' : ''}" onclick="Loom4.loadChat(${chat.id})">
+            <i class="fas fa-message"></i>
             <div class="chat-title">${chat.title}</div>
-            <div class="chat-preview">${this.getLastMessage(chat)}</div>
             <div class="chat-time">${this.formatDate(chat.updatedAt)}</div>
           </div>
         `).join('');
       }
+
 
       // Get last message from chat
       getLastMessage(chat) {
@@ -3801,103 +3915,6 @@ export { InteractiveComponent };`;
         modal.classList.remove('active');
       }
 
-      // Toggle profile drawer
-      toggleProfileDrawer() {
-        const drawer = document.getElementById('profile-drawer');
-        const overlay = document.getElementById('profile-drawer-overlay');
-        const profileButton = document.getElementById('profileToggle');
-        
-        if (drawer.classList.contains('active')) {
-          this.closeProfileDrawer();
-        } else {
-          this.openProfileDrawer();
-        }
-      }
-
-      // Open profile drawer
-      openProfileDrawer() {
-        const drawer = document.getElementById('profile-drawer');
-        const overlay = document.getElementById('profile-drawer-overlay');
-        const profileButton = document.getElementById('profileToggle');
-        
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-        profileButton?.classList.add('active');
-      }
-
-      // Close profile drawer
-      closeProfileDrawer() {
-        const drawer = document.getElementById('profile-drawer');
-        const overlay = document.getElementById('profile-drawer-overlay');
-        const profileButton = document.getElementById('profileToggle');
-        
-        drawer.classList.remove('active');
-        overlay.classList.remove('active');
-        profileButton?.classList.remove('active');
-      }
-
-      // Handle profile menu actions
-      handleProfileAction(action) {
-        console.log('Profile action triggered:', action);
-        
-        switch (action) {
-          case 'personal':
-            this.closeProfileDrawer();
-            this.showModal('personal-settings-modal');
-            break;
-          case 'settings':
-            this.closeProfileDrawer();
-            this.showModal('settings-modal');
-            break;
-          case 'language':
-            this.closeProfileDrawer();
-            this.showModal('language-modal');
-            break;
-          case 'help':
-            this.closeProfileDrawer();
-            this.showModal('help-modal');
-            break;
-          case 'upgrade':
-            this.closeProfileDrawer();
-            this.showModal('upgrade-modal');
-            break;
-          case 'learn':
-            this.closeProfileDrawer();
-            this.showModal('learn-modal');
-            break;
-          case 'logout':
-            this.closeProfileDrawer();
-            this.handleLogout();
-            return;
-          default:
-            console.log('Unknown profile action:', action);
-            return;
-        }
-      }
-
-      // Save profile changes
-      saveProfile() {
-        const name = document.getElementById('user-name').value;
-        const email = document.getElementById('user-email').value;
-        
-        if (!name.trim() || !email.trim()) {
-          alert('Please fill in all required fields.');
-          return;
-        }
-        
-        // Update profile in sidebar
-        document.querySelector('.profile-name').textContent = name;
-        
-        // Store in localStorage (in real app, this would be API call)
-        localStorage.setItem('loom4_user_profile', JSON.stringify({
-          name: name,
-          email: email,
-          plan: 'Free Plan'
-        }));
-        
-        this.closeModal(document.getElementById('personal-settings-modal'));
-        this.showNotification('Profile updated successfully!', 'success');
-      }
 
       // Save application settings
       saveSettings() {
@@ -3963,8 +3980,6 @@ export { InteractiveComponent };`;
           localStorage.removeItem('loom4_language');
           
           // Reset UI
-          document.querySelector('.profile-name').textContent = 'John Doe';
-          document.querySelector('.profile-plan').textContent = 'Free Plan';
           
           this.showNotification('Successfully logged out!', 'info');
           
@@ -4131,11 +4146,6 @@ export { InteractiveComponent };`;
           this.panelSizes = { ...this.panelSizes, ...JSON.parse(savedSizes) };
         }
         
-        // Load sidebar state
-        const sidebarMinimized = localStorage.getItem('loom4_sidebar_minimized');
-        if (sidebarMinimized === 'true') {
-          this.minimizeSidebar();
-        }
         
         // Initial setup - artifact panel only visible in chat section
         if (this.currentSection === 'chat') {
@@ -4155,29 +4165,60 @@ export { InteractiveComponent };`;
         }
       }
 
-      // Toggle sidebar minimize/expand
-      toggleSidebar() {
-        if (this.sidebarMinimized) {
-          this.expandSidebar();
+
+      // Profile menu methods
+      toggleProfileMenu() {
+        const trigger = document.getElementById('profile-menu-trigger');
+        const overlay = document.getElementById('profile-menu-overlay');
+        
+        if (overlay.classList.contains('active')) {
+          this.closeProfileMenu();
         } else {
-          this.minimizeSidebar();
+          this.openProfileMenu();
         }
       }
 
-      // Minimize sidebar
-      minimizeSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.add('minimized');
-        this.sidebarMinimized = true;
-        localStorage.setItem('loom4_sidebar_minimized', 'true');
+      openProfileMenu() {
+        const trigger = document.getElementById('profile-menu-trigger');
+        const overlay = document.getElementById('profile-menu-overlay');
+        
+        trigger.classList.add('active');
+        overlay.classList.add('active');
       }
 
-      // Expand sidebar
-      expandSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.remove('minimized');
-        this.sidebarMinimized = false;
-        localStorage.setItem('loom4_sidebar_minimized', 'false');
+      closeProfileMenu() {
+        const trigger = document.getElementById('profile-menu-trigger');
+        const overlay = document.getElementById('profile-menu-overlay');
+        
+        trigger.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+
+      handleProfileMenuAction(action) {
+        this.closeProfileMenu();
+        
+        switch(action) {
+          case 'settings':
+            console.log('Opening settings...');
+            break;
+          case 'language':
+            console.log('Opening language settings...');
+            break;
+          case 'help':
+            console.log('Opening help...');
+            break;
+          case 'upgrade':
+            console.log('Opening upgrade plan...');
+            break;
+          case 'learn':
+            console.log('Opening learn more...');
+            break;
+          case 'logout':
+            console.log('Logging out...');
+            break;
+          default:
+            console.log('Unknown action:', action);
+        }
       }
 
       // View artifact in panel (new method)
@@ -4185,24 +4226,40 @@ export { InteractiveComponent };`;
         const artifact = this.data.artifacts.find(a => a.id === id);
         if (!artifact) return;
 
+        // Find the chat that contains this artifact
+        const relatedChat = this.findChatWithArtifact(id);
+        
+        if (relatedChat) {
+          // Switch to chat section without showing chat list, then load the related chat
+          this.showChatSection();
+          this.loadChat(relatedChat.id);
+        }
+
+        // Show and render the artifact in the artifact panel
         this.currentArtifact = artifact;
         this.showArtifactPanel();
         this.showArtifactViewer(artifact);
       }
 
+      // Find chat that contains a specific artifact
+      findChatWithArtifact(artifactId) {
+        return this.data.chats.find(chat => 
+          chat.messages.some(message => 
+            message.hasArtifact && message.artifactId === artifactId
+          )
+        );
+      }
+
       // Show artifact viewer in panel
       showArtifactViewer(artifact) {
-        // Update header info
-        document.getElementById('artifact-title').textContent = artifact.title;
-        document.getElementById('artifact-type').textContent = artifact.type.toUpperCase();
-        document.getElementById('artifact-size').textContent = artifact.size;
-        document.getElementById('artifact-date').textContent = this.formatDate(artifact.createdAt);
-
         // Switch to viewer mode
-        document.getElementById('artifact-default-header').style.display = 'none';
-        document.getElementById('artifact-viewer-header').style.display = 'flex';
-        document.getElementById('artifact-default-content').style.display = 'none';
-        document.getElementById('artifact-viewer-content').style.display = 'flex';
+        const defaultContent = document.getElementById('artifact-default-content');
+        const viewerContent = document.getElementById('artifact-viewer-content');
+        
+        if (defaultContent && viewerContent) {
+          defaultContent.style.display = 'none';
+          viewerContent.style.display = 'flex';
+        }
 
         // Create tabs and content based on artifact type
         this.renderArtifactViewer(artifact);
@@ -4213,11 +4270,30 @@ export { InteractiveComponent };`;
         const tabsContainer = document.getElementById('artifact-viewer-tabs');
         const bodyContainer = document.getElementById('artifact-viewer-body');
 
+        // Add artifact header with title and back button
+        const headerHtml = `
+          <div class="artifact-viewer-header-info">
+            <button class="btn btn-ghost" id="back-to-list-btn" title="Back to List">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="artifact-info">
+              <h3>${artifact.title}</h3>
+              <div class="artifact-meta">
+                <span class="artifact-type-badge">${artifact.type.toUpperCase()}</span>
+                <span class="artifact-size">${artifact.size}</span>
+                <span class="artifact-date">${this.formatDate(artifact.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
         if (artifact.type === 'html') {
           // HTML artifacts get Preview and Code tabs
-          tabsContainer.innerHTML = `
-            <button class="artifact-tab active" data-tab="preview">Preview</button>
-            <button class="artifact-tab" data-tab="code">Code</button>
+          tabsContainer.innerHTML = headerHtml + `
+            <div class="artifact-tabs-row">
+              <button class="artifact-tab active" data-tab="preview">Preview</button>
+              <button class="artifact-tab" data-tab="code">Code</button>
+            </div>
           `;
           
           bodyContainer.innerHTML = `
@@ -4230,8 +4306,10 @@ export { InteractiveComponent };`;
           `;
         } else {
           // Other artifacts get only Code tab
-          tabsContainer.innerHTML = `
-            <button class="artifact-tab active" data-tab="code">Code</button>
+          tabsContainer.innerHTML = headerHtml + `
+            <div class="artifact-tabs-row">
+              <button class="artifact-tab active" data-tab="code">Code</button>
+            </div>
           `;
           
           bodyContainer.innerHTML = `
@@ -4240,6 +4318,9 @@ export { InteractiveComponent };`;
             </div>
           `;
         }
+
+        // Re-attach event listeners for the new back button
+        document.getElementById('back-to-list-btn')?.addEventListener('click', () => this.showArtifactList());
 
         // Setup tab switching
         tabsContainer.querySelectorAll('.artifact-tab').forEach(tab => {
@@ -4261,10 +4342,13 @@ export { InteractiveComponent };`;
 
       // Show artifact list (back button)
       showArtifactList() {
-        document.getElementById('artifact-default-header').style.display = 'flex';
-        document.getElementById('artifact-viewer-header').style.display = 'none';
-        document.getElementById('artifact-default-content').style.display = 'block';
-        document.getElementById('artifact-viewer-content').style.display = 'none';
+        const defaultContent = document.getElementById('artifact-default-content');
+        const viewerContent = document.getElementById('artifact-viewer-content');
+        
+        if (defaultContent && viewerContent) {
+          defaultContent.style.display = 'block';
+          viewerContent.style.display = 'none';
+        }
         
         this.currentArtifact = null;
       }
