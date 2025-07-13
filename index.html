@@ -2,29 +2,40 @@
 <html lang="en">
 
 <head>
+  <!-- Meta tags for character encoding and responsive design -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loom4</title>
+  
+  <!-- External CSS libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+  <!-- Main application container - houses sidebar and main content -->
   <div class="app-container">
-    <!-- Left Sidebar -->
+    
+    <!-- LEFT SIDEBAR - Navigation and chat history -->
     <div class="sidebar" id="sidebar">
+      
+      <!-- Sidebar header with logo and toggle button -->
       <div class="sidebar-header">
         <div class="header-content">
+          <!-- Toggle button to collapse/expand sidebar -->
           <div class="sidebar-toggle" id="sidebarToggle">
             <i class="fa-brands fa-flipboard"></i>
           </div>
+          <!-- Application logo -->
           <div class="app-logo">
             <h1>Loom4</h1>
           </div>
         </div>
       </div>
 
+      <!-- Navigation menu -->
       <nav class="sidebar-nav">
+        <!-- Main navigation items -->
         <div class="nav-item active" data-section="projects">
           <i class="fas fa-folder"></i>
           <span>Projects</span>
@@ -45,72 +56,62 @@
           <span>Chat</span>
         </div>
 
+        <!-- Recent chat history section -->
         <div class="nav-section" id="recentChatSection">
           <div class="nav-section-header">
             <span>Recent Chat</span>
           </div>
+          <!-- Dynamic chat list populated by JavaScript -->
           <div class="chat-list" id="chatList">
             <!-- Chat history will be populated here -->
           </div>
         </div>
 
-        <!-- Profile Section -->
+        <!-- User profile section at bottom of sidebar -->
         <div class="profile-section">
+          <!-- Profile toggle button -->
           <div class="nav-item profile-item" id="profileToggle">
             <i class="fas fa-user-circle"></i>
             <span>My Profile</span>
-            <i class="fas fa-chevron-down" id="profileArrow"></i>
-          </div>
-
-          <div class="profile-submenu" id="profileSubmenu">
-            <div class="submenu-item" data-action="settings">
-              <i class="fas fa-cog"></i> Settings
-            </div>
-            <div class="submenu-item" data-action="contact">
-              <i class="fas fa-envelope"></i> Contact Us
-            </div>
-            <div class="submenu-item" data-action="upgrade">
-              <i class="fas fa-rocket"></i> Upgrade Plan
-            </div>
-            <div class="submenu-item" data-action="learn">
-              <i class="fas fa-question-circle"></i> Learn More
-            </div>
-            <div class="submenu-item" data-action="logout">
-              <i class="fas fa-sign-out-alt"></i> Log Out
-            </div>
           </div>
         </div>
       </nav>
     </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT AREA - Different sections shown based on navigation -->
     <div class="main-content">
-      <!-- Projects Section -->
+      
+      <!-- PROJECTS SECTION - Manage AI projects -->
       <div class="content-section active" id="projects-section">
         <div class="section-container">
           <div class="section-header">
             <h2>Projects</h2>
+            <!-- Button to create new project -->
             <button class="add-btn" id="addProjectBtn">
               <i class="fas fa-plus"></i>
               Add Project
             </button>
           </div>
+          <!-- Grid layout for project cards -->
           <div class="projects-grid" id="projectsGrid">
-            <!-- Projects will be populated here -->
+            <!-- Projects will be populated here by JavaScript -->
           </div>
         </div>
       </div>
 
-      <!-- Connect Section -->
+      <!-- CONNECT SECTION - Knowledge base connections -->
       <div class="content-section" id="connect-section">
         <div class="connect-container">
+          <!-- Section header -->
           <div class="connect-header">
             <h1>Knowledge Base</h1>
             <p>Connect your data sources to enhance AI conversations</p>
           </div>
 
+          <!-- Grid of connection options -->
           <div class="connect-grid">
-            <!-- File Connection Card -->
+            
+            <!-- File upload connection card -->
             <div class="connect-card" data-connection-type="file">
               <div class="connect-card-header">
                 <div class="connect-icon file-icon">
@@ -122,7 +123,7 @@
               <button class="connect-btn">Connect Files</button>
             </div>
 
-            <!-- Web Connection Card -->
+            <!-- Web content connection card -->
             <div class="connect-card" data-connection-type="web">
               <div class="connect-card-header">
                 <div class="connect-icon url-icon">
@@ -134,7 +135,7 @@
               <button class="connect-btn">Connect Website</button>
             </div>
 
-            <!-- Database Connection Card -->
+            <!-- Database connection card -->
             <div class="connect-card" data-connection-type="database">
               <div class="connect-card-header">
                 <div class="connect-icon database-icon">
@@ -146,7 +147,7 @@
               <button class="connect-btn">Connect Database</button>
             </div>
 
-            <!-- API Connection Card -->
+            <!-- API connection card -->
             <div class="connect-card" data-connection-type="api">
               <div class="connect-card-header">
                 <div class="connect-icon api-icon">
@@ -156,6 +157,7 @@
                 <h3>API</h3>
               </div>
               <p>Connect to REST or GraphQL APIs</p>
+              <!-- API type badges -->
               <div class="api-badges">
                 <span class="api-badge rest">REST</span>
                 <span class="api-badge graphql">GraphQL</span>
@@ -165,10 +167,11 @@
             </div>
           </div>
 
-          <!-- Knowledge Sources Overview -->
+          <!-- Overview of connected knowledge sources -->
           <div class="knowledge-overview">
             <div class="overview-header">
               <h2>Connected Knowledge Sources</h2>
+              <!-- Statistics display -->
               <div class="overview-stats">
                 <div class="stat-item">
                   <span class="stat-number" id="totalFiles">0</span>
@@ -188,7 +191,7 @@
                 </div>
               </div>
             </div>
-
+            <!-- List of connected knowledge sources -->
             <div class="knowledge-list" id="knowledgeList">
               <!-- Knowledge sources will be listed here -->
             </div>
@@ -196,40 +199,45 @@
         </div>
       </div>
 
-      <!-- Artifacts Section -->
+      <!-- ARTIFACTS SECTION - View generated artifacts -->
       <div class="content-section" id="artifacts-section">
         <div class="artifacts-container">
           <h2>Your Artifacts</h2>
+          <!-- Grid of artifact cards -->
           <div class="artifacts-grid" id="artifactsGrid">
-            <!-- Artifacts will be populated here -->
+            <!-- Artifacts will be populated here by JavaScript -->
           </div>
         </div>
       </div>
 
-      <!-- Chat Section -->
+      <!-- CHAT SECTION - Chat history overview -->
       <div class="content-section" id="chat-section">
         <div class="chat-history-container">
           <div class="chat-history-header">
             <h1>Your chat history</h1>
+            <!-- Button to start new chat -->
             <button class="new-chat-btn" id="addChatBtn">
               <i class="fas fa-plus"></i>
               New chat
             </button>
           </div>
+          <!-- Search functionality for chats -->
           <div class="chat-search-container">
             <div class="chat-search">
               <i class="fas fa-search"></i>
               <input type="text" placeholder="Search your chats..." id="chatSearchInput">
             </div>
           </div>
+          <!-- List of chat history items -->
           <div class="chat-history-list" id="chatHistoryList">
-            <!-- Chat history will be populated here -->
+            <!-- Chat history will be populated here by JavaScript -->
           </div>
         </div>
       </div>
 
-      <!-- Active Chat View -->
+      <!-- ACTIVE CHAT VIEW - Main chat interface -->
       <div class="content-section" id="active-chat-section">
+        <!-- Chat header with model selector and artifact button -->
         <div class="chat-header">
           <div class="model-selector">
             <select id="modelSelect">
@@ -238,12 +246,15 @@
               <option value="claude-3-opus">Claude 3 Opus</option>
             </select>
           </div>
+          <!-- Button to open last artifact -->
           <button class="last-artifact-btn" id="lastArtifactBtn" title="Open last artifact">
             <i class="fas fa-cube"></i>
           </button>
         </div>
 
+        <!-- Chat messages area -->
         <div class="chat-messages" id="chatMessages">
+          <!-- Welcome message shown initially -->
           <div class="welcome-message">
             <div class="welcome-content">
               <h1>Hello, I'm Loom4</h1>
@@ -252,6 +263,7 @@
           </div>
         </div>
 
+        <!-- Chat input area -->
         <div class="chat-input-container">
           <div class="chat-input">
             <textarea id="messageInput" placeholder="How can I help you today?"></textarea>
@@ -263,8 +275,9 @@
       </div>
     </div>
 
-    <!-- Artifact Viewer -->
+    <!-- ARTIFACT VIEWER - Side panel for viewing artifacts -->
     <div class="artifact-viewer" id="artifactViewer">
+      <!-- Artifact header with title and close button -->
       <div class="artifact-header">
         <div class="artifact-info">
           <h3 id="artifactTitle">Artifact Viewer</h3>
@@ -274,6 +287,7 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
+      <!-- Artifact content display area -->
       <div class="artifact-content" id="artifactContent">
         <div class="no-artifact">
           <i class="fas fa-cube"></i>
@@ -283,7 +297,83 @@
     </div>
   </div>
 
-  <!-- Loading indicator -->
+  <!-- PROFILE OVERLAY MENU -->
+  <div class="profile-overlay" id="profileOverlay">
+    <div class="profile-overlay-content">
+      <!-- Profile Header -->
+      <div class="profile-overlay-header">
+        <h3>Loom4 AI Assistant</h3>
+        <p id="profileUserEmail">john.doe@example.com</p>
+      </div>
+
+      <!-- Profile Info Section -->
+      <div class="profile-info-section">
+        <div class="profile-avatar-section">
+          <div class="profile-avatar-circle">
+            <span id="profileInitials">JD</span>
+          </div>
+          <div class="profile-details">
+            <h4>Personal</h4>
+            <p>Free plan</p>
+          </div>
+          <div class="profile-checkmark">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Menu Items -->
+      <div class="profile-menu">
+        <div class="profile-menu-item" data-action="settings">
+          <span>Settings</span>
+        </div>
+
+        <div class="profile-menu-item" data-action="language">
+          <span>Language</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="profile-menu-item" data-action="contact">
+          <span>Get help</span>
+        </div>
+
+        <div class="profile-menu-divider"></div>
+
+        <div class="profile-menu-item" data-action="upgrade">
+          <span>Upgrade plan</span>
+        </div>
+
+        <div class="profile-menu-item" data-action="learn">
+          <span>Learn more</span>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="profile-menu-divider"></div>
+
+        <div class="profile-menu-item logout" data-action="logout">
+          <span>Log out</span>
+        </div>
+      </div>
+
+      <!-- Bottom Profile Section -->
+      <div class="profile-bottom-section">
+        <div class="profile-avatar-section">
+          <div class="profile-avatar-circle">
+            <span>JD</span>
+          </div>
+          <div class="profile-details">
+            <h4 id="profileUserName">John Doe</h4>
+            <p>Free plan</p>
+          </div>
+          <div class="profile-dropdown-arrow">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING INDICATOR - Shows when AI is typing -->
   <div class="typing-indicator" id="typingIndicator">
     <div class="typing-dots">
       <div class="dot"></div>
@@ -292,7 +382,9 @@
     </div>
   </div>
 
-  <!-- Modals -->
+  <!-- MODAL DIALOGS -->
+  
+  <!-- Project creation modal -->
   <div class="project-modal" id="projectModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -300,6 +392,7 @@
         <button class="close-modal">&times;</button>
       </div>
       <div class="modal-body">
+        <!-- Project creation form fields -->
         <div class="form-group">
           <label>Project Name</label>
           <input type="text" id="projectName" placeholder="e.g. Marketing Campaign">
@@ -312,6 +405,7 @@
           <label>Instructions</label>
           <textarea id="projectInstructions" placeholder="Specific guidelines for this project"></textarea>
         </div>
+        <!-- Knowledge base selection -->
         <div class="form-group">
           <label>Knowledge Base</label>
           <div class="knowledge-options">
@@ -336,7 +430,7 @@
     </div>
   </div>
 
-  <!-- Connection Modal -->
+  <!-- Connection setup modal -->
   <div class="connection-modal" id="connectionModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -344,7 +438,7 @@
         <button class="close-modal">&times;</button>
       </div>
       <div class="modal-body" id="modalBody">
-        <!-- Dynamic form will be inserted here -->
+        <!-- Dynamic form will be inserted here by JavaScript -->
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary close-modal">Cancel</button>
@@ -353,7 +447,7 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
+  <!-- Settings modal -->
   <div class="settings-modal" id="settingsModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -361,12 +455,14 @@
         <button class="close-modal">&times;</button>
       </div>
       <div class="modal-body">
+        <!-- Settings tabs -->
         <div class="settings-tabs">
           <div class="tab active" data-tab="general">General</div>
           <div class="tab" data-tab="profile">Profile</div>
           <div class="tab" data-tab="about">About</div>
         </div>
 
+        <!-- General settings tab content -->
         <div class="tab-content active" data-tab="general">
           <div class="form-group">
             <label>Language</label>
@@ -376,6 +472,7 @@
               <option value="fr">Français</option>
             </select>
           </div>
+          <!-- Theme selection -->
           <div class="form-group">
             <label>Theme</label>
             <div class="theme-options">
@@ -395,6 +492,7 @@
           </div>
         </div>
 
+        <!-- Profile tab content -->
         <div class="tab-content" data-tab="profile">
           <div class="profile-view">
             <div class="avatar"></div>
@@ -405,6 +503,7 @@
           </div>
         </div>
 
+        <!-- About tab content -->
         <div class="tab-content" data-tab="about">
           <div class="about-content">
             <h4>About Loom4</h4>
@@ -419,7 +518,7 @@
     </div>
   </div>
 
-  <!-- Chat Rename Modal -->
+  <!-- Chat rename modal -->
   <div class="chat-rename-modal" id="chatRenameModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -439,7 +538,7 @@
     </div>
   </div>
 
-  <!-- Chat Share Modal -->
+  <!-- Chat share modal -->
   <div class="chat-share-modal" id="chatShareModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -447,6 +546,7 @@
         <button class="close-modal">&times;</button>
       </div>
       <div class="modal-body">
+        <!-- Share link generation -->
         <div class="form-group">
           <label>Share Link</label>
           <div class="share-link-container">
@@ -456,6 +556,7 @@
             </button>
           </div>
         </div>
+        <!-- Public sharing option -->
         <div class="form-group">
           <label>
             <input type="checkbox" id="sharePublic" checked>
@@ -469,6 +570,7 @@
     </div>
   </div>
 
+  <!-- JavaScript file -->
   <script src="script.js"></script>
 </body>
 

@@ -115,4 +115,4 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 ## Contact
 
-For questions or feedback, please contact: [your.email@example.com](mailto:your.email@example.com)
+For questions or feedback, please contact: [info@kedata.online](mailto:info@kedata.online)
