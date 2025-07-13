@@ -29,7 +29,7 @@ Loom4 is a modern AI-powered productivity platform that combines project managem
 ### Setup
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/loom4.git
+   git clone https://github.com/eppofahmi/loom4.git
    ```
 2. Open `index.html` in your web browser
 
