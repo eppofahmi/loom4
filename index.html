@@ -1,167 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loom4 - AI Chat Application</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loom4</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="app-container">
-        <!-- Mobile Backdrop -->
-        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-        
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar" aria-expanded="true">
-            <!-- Header Section -->
-            <div class="sidebar-header">
-                <div class="header-top">
-                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1 class="app-title">
-                        <span class="logo-icon">L</span>
-                        <span class="logo-text">Loom4</span>
-                    </h1>
-                </div>
-                <button class="new-chat-btn primary">
-                    <i class="fas fa-plus"></i>
-                    <span class="btn-text">New chat</span>
-                </button>
-            </div>
+  <div class="app-container">
+    <!-- Left Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="header-content">
+          <div class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </div>
+          <div class="app-logo">
+            <h1>Loom4</h1>
+          </div>
+        </div>
+      </div>
 
-            <!-- Navigation Menu -->
-            <nav class="navigation">
-                <ul class="nav-list">
-                    <li class="nav-item active">
-                        <a href="#" class="nav-link" data-section="chats" title="Chats">
-                            <i class="fas fa-comments nav-icon"></i>
-                            <span class="nav-text">Chats</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-section="projects" title="Projects">
-                            <i class="fas fa-folder nav-icon"></i>
-                            <span class="nav-text">Projects</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-section="artifacts" title="Artifacts">
-                            <i class="fas fa-cube nav-icon"></i>
-                            <span class="nav-text">Artifacts</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-section="connector" title="Connector">
-                            <i class="fas fa-link nav-icon"></i>
-                            <span class="nav-text">Connector</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+      <nav class="sidebar-nav">
+        <!-- Main Navigation -->
+        <div class="main-nav-section sidebar-section">
+          <div class="menu-item nav-item" id="addChatBtn">
+            <i class="menu-icon fas fa-plus"></i>
+            <span class="menu-text">New Chat</span>
+          </div>
 
-            <!-- Recent Chats Section -->
-            <div class="recent-chats">
-                <h3 class="section-title">
-                    <span class="title-text">Recents</span>
-                </h3>
-                <div class="chat-list" id="recentChatsList">
-                    <!-- Chat items will be populated by JavaScript -->
-                </div>
-            </div>
+          <div class="menu-item nav-item" data-section="projects">
+            <i class="menu-icon fas fa-folder"></i>
+            <span class="menu-text">Projects</span>
+          </div>
 
-            <!-- User Profile -->
-            <div class="user-profile">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="user-details">
-                        <span class="username">User</span>
-                        <span class="plan-type">Free plan</span>
-                    </div>
-                    <button class="dropdown-arrow" id="userDropdown" aria-label="User menu">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <div class="user-menu" id="userMenu">
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-user"></i>
-                        <span>Profile</span>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </a>
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-question-circle"></i>
-                        <span>Help</span>
-                    </a>
-                    <hr class="menu-divider">
-                    <a href="#" class="menu-item">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Sign out</span>
-                    </a>
-                </div>
-            </div>
-        </aside>
+          <div class="menu-item nav-item" data-section="connect">
+            <i class="menu-icon fas fa-plug"></i>
+            <span class="menu-text">Connect</span>
+          </div>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Header Row -->
-            <div class="chat-header-row">
-                <h1 class="chat-history-title">Your chat history</h1>
-                <button class="new-chat-btn-dark">
-                    <i class="fas fa-plus"></i>
-                    New chat
-                </button>
-            </div>
+          <div class="menu-item nav-item" data-section="artifacts">
+            <i class="menu-icon fas fa-cube"></i>
+            <span class="menu-text">Artifacts</span>
+          </div>
 
-            <!-- Search Section -->
-            <div class="search-section">
-                <div class="search-container">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Search your chats..." id="searchInput">
-                </div>
-            </div>
+          <div class="menu-item nav-item active" data-section="chat">
+            <i class="menu-icon fas fa-comments"></i>
+            <span class="menu-text">Chat</span>
+          </div>
+        </div>
 
-            <!-- Chat Count & Selection Row -->
-            <div class="chat-count-section">
-                <!-- Normal State -->
-                <div class="normal-state" id="normalState">
-                    <span class="chat-count-text">You have <span id="chatCount">0</span> previous chats with Loom4</span>
-                    <button class="select-link" id="selectBtn">Selected (<span id="selectedCount">0</span>)</button>
-                </div>
-                
-                <!-- Selection State -->
-                <div class="selection-state" id="selectionState">
-                    <div class="selection-info">
-                        <i class="fas fa-check-circle"></i>
-                        <span id="selectionCount">0</span> selected chats
-                    </div>
-                    <div class="selection-actions">
-                        <button class="select-all-btn" id="selectAllBtn">Select all</button>
-                        <button class="cancel-selection-btn" id="cancelSelectionBtn">Cancel</button>
-                        <button class="delete-selected-btn" id="deleteSelectedBtn">Delete Selected</button>
-                    </div>
-                </div>
+        <div class="nav-section" id="recentChatSection">
+          <div class="nav-section-header">
+            <span>Recent</span>
+          </div>
+          <div class="chat-list" id="chatList">
+            <!-- Chat history will be populated here -->
+            <!-- View All Button for sidebar (integrated within scrollable list) -->
+            <div class="sidebar-chat-footer" id="sidebarChatFooter" style="display: none;">
+              <button class="sidebar-view-all-btn" id="sidebarViewAllBtn">View All</button>
             </div>
+          </div>
+        </div>
 
-            <!-- Chat List -->
-            <div class="chat-list-container">
-                <div class="chat-history" id="chatHistory">
-                    <!-- Chat history items will be populated by JavaScript -->
-                </div>
-                
-                <!-- View All Button -->
-                <div class="view-all-section">
-                    <button class="view-all-btn" id="viewAllBtn">View all</button>
-                </div>
-            </div>
-        </main>
+        <!-- Profile Section -->
+        <div class="profile-section sidebar-section">
+          <div class="nav-item profile-item sidebar-avatar" id="profileToggle">
+            <i class="avatar-icon fas fa-user-circle"></i>
+            <span class="avatar-text">User</span>
+            <i class="fas fa-chevron-down" id="profileArrow"></i>
+          </div>
+        </div>
+      </nav>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Main Content -->
+    <div class="main-content">
+      
+      <!-- Projects Section -->
+      <div class="content-section" id="projects-section">
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Projects</h2>
+            <button class="add-btn" id="addProjectBtn">
+              <i class="fas fa-plus"></i>
+              Add Project
+            </button>
+          </div>
+          <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Connect Section -->
+      <div class="content-section" id="connect-section">
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Knowledge Base</h2>
+            <p>Connect your data sources to enhance AI conversations</p>
+          </div>
+          <div class="connect-grid">
+            <!-- File Connection Card -->
+            <div class="connect-card" data-connection-type="file">
+              <div class="connect-card-header">
+                <div class="connect-icon file-icon">
+                  <i class="fas fa-file-upload"></i>
+                </div>
+                <h3>Files</h3>
+              </div>
+              <p>Upload documents, PDFs, and other files</p>
+              <button class="connect-btn">Connect Files</button>
+            </div>
+
+            <!-- Web Connection Card -->
+            <div class="connect-card" data-connection-type="web">
+              <div class="connect-card-header">
+                <div class="connect-icon url-icon">
+                  <i class="fas fa-globe"></i>
+                </div>
+                <h3>Web Content</h3>
+              </div>
+              <p>Connect to websites and online resources</p>
+              <button class="connect-btn">Connect Website</button>
+            </div>
+
+            <!-- Database Connection Card -->
+            <div class="connect-card" data-connection-type="database">
+              <div class="connect-card-header">
+                <div class="connect-icon database-icon">
+                  <i class="fas fa-database"></i>
+                </div>
+                <h3>Database</h3>
+              </div>
+              <p>Connect to your SQL or NoSQL databases</p>
+              <button class="connect-btn">Connect Database</button>
+            </div>
+
+            <!-- API Connection Card -->
+            <div class="connect-card" data-connection-type="api">
+              <div class="connect-card-header">
+                <div class="connect-icon api-icon">
+                  <i class="fa-solid fa-plug"></i>
+                </div>
+                <h3>API</h3>
+              </div>
+              <p>Connect to REST or GraphQL APIs</p>
+              <button class="connect-btn">Configure API</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Artifacts Section -->
+      <div class="content-section" id="artifacts-section">
+        <div class="artifacts-page-container">
+          <!-- Page Header -->
+          <div class="artifacts-page-header">
+            <div class="artifacts-page-title">
+              <h1>Artifacts</h1>
+              <p class="artifacts-page-subtitle">Manage reusable building blocks for consistent AI behavior</p>
+            </div>
+          </div>
+
+          <!-- Toolbar Section -->
+          <div class="artifacts-toolbar">
+            <div class="artifacts-toolbar-left">
+              <div class="artifacts-count">
+                <span id="artifactsCountText">You have 0 artifacts created with Loom4</span>
+              </div>
+            </div>
+            <div class="artifacts-toolbar-right">
+              <div class="artifacts-search">
+                <div class="search-input-container">
+                  <i class="fa-solid fa-search search-icon"></i>
+                  <input type="text" id="artifactsSearchInput" placeholder="Search artifacts..." class="search-input">
+                </div>
+              </div>
+              <button class="new-artifact-btn" id="newArtifactBtn">
+                <i class="fa-solid fa-plus"></i>
+                New Artifact
+              </button>
+            </div>
+          </div>
+
+          <!-- Artifacts Grid/List -->
+          <div class="artifacts-container" id="artifactsContainer">
+            <div class="artifacts-grid" id="artifactsGrid">
+              <!-- Artifacts will be populated here -->
+            </div>
+            <div class="artifacts-view-all" id="artifactsViewAll" style="display: none;">
+              <button class="view-all-btn" id="artifactsViewAllBtn">View All</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="content-section active" id="chat-section">
+        <!-- Chat List Panel -->
+        <div class="chat-list-panel" id="chatListPanel">
+          <!-- Row 1: Header -->
+          <div class="chat-list-header">
+            <h2 class="chat-list-title">Your Chat History</h2>
+            <button class="new-chat-btn-panel" id="newChatBtnPanel">
+              <i class="fas fa-plus"></i>
+              New Chat
+            </button>
+          </div>
+
+          <!-- Row 2: Search -->
+          <div class="chat-list-search">
+            <div class="search-box">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="chatSearchInput" placeholder="Search your chats...">
+            </div>
+          </div>
+
+          <!-- Row 3: Default info and Selection Controls -->
+          <div class="chat-list-info-row">
+            <!-- Default info text -->
+            <div class="chat-info-text" id="chatInfoText">
+              You have <span id="totalChatsCount">0</span> previous chats with Loom4.
+            </div>
+            
+            <!-- Selection toolbar (conditionally visible) -->
+            <div class="chat-list-selection" id="chatListSelection" style="display: none;">
+              <div class="selection-left">
+                <span class="selected-count" id="selectedCount">Selected</span>
+              </div>
+              <div class="selection-right">
+                <button class="selection-btn select-all-btn" id="selectAllBtn">Select All</button>
+                <button class="selection-btn cancel-btn" id="cancelSelectionBtn">Cancel</button>
+                <button class="selection-btn delete-btn" id="deleteSelectedBtn">Delete Selected</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Items List -->
+          <div class="chat-items-list" id="chatItemsList">
+            <!-- Chat items will be populated here -->
+            <!-- View All Button (integrated within scrollable list) -->
+            <div class="chat-list-footer" id="chatListFooter" style="display: none;">
+              <button class="view-all-btn" id="viewAllBtn">View All</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+
+          <!-- Chat Header -->
+          <div class="chat-header" id="chatHeader">
+            <div class="chat-header-title" id="chatHeaderTitle">Chat with Loom4</div>
+            <div class="chat-header-buttons">
+              <button class="chat-header-btn" id="shareBtn" title="Share Chat">
+                <i class="fa-solid fa-share"></i>
+              </button>
+              <button class="chat-header-btn" id="expandArtifactBtn" title="Expand Artifact Viewer">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Messages -->
+          <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+              <div class="welcome-content">
+                <h1>Hello, I'm Loom4</h1>
+                <p>I'm an AI assistant that can help you with analysis, writing, coding, math, and many other tasks.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+              <div class="chat-input">
+                <!-- Text input row -->
+                <div class="input-text-row">
+                  <textarea id="messageInput" placeholder="Message Loom4..." rows="1"></textarea>
+                </div>
+                
+                <!-- Controls row -->
+                <div class="input-controls-row">
+                  <div class="input-left-controls">
+                    <button class="input-control-btn" id="addAttachmentBtn" title="Add attachment">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="input-control-btn" id="toolsBtn" title="Tools">
+                      <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="input-right-controls">
+                    <div class="model-selector">
+                      <select id="modelSelect">
+                        <option value="loom4-advanced">Loom4 Advanced</option>
+                        <option value="loom4-standard">Loom4 Standard</option>
+                        <option value="loom4-fast">Loom4 Fast</option>
+                      </select>
+                    </div>
+                    <button id="sendButton" class="send-btn" disabled>
+                      <i class="fas fa-paper-plane"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Artifact Viewer -->
+        <div class="artifact-viewer" id="artifactViewer">
+          <div class="artifact-viewer-header">
+            <div class="artifact-viewer-title">
+              <span id="artifactViewerName">Artifact Name</span>
+            </div>
+            <div class="artifact-viewer-actions">
+              <button class="artifact-viewer-btn" id="copyArtifactBtn" title="Copy">
+                <i class="fa-solid fa-copy"></i>
+              </button>
+              <button class="artifact-viewer-btn" id="publishArtifactBtn" title="Publish">
+                <i class="fa-solid fa-share"></i>
+              </button>
+              <button class="artifact-viewer-btn" id="closeArtifactBtn" title="Close">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div class="artifact-viewer-content" id="artifactViewerContent">
+            <!-- Artifact content will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Resize handle for artifact viewer -->
+        <div class="resize-handle" id="resizeHandle"></div>
+      </div>
+      
+    </div>
+
+    <!-- Legacy artifact viewer removed - now using integrated artifact panel -->
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="typing-indicator" id="typingIndicator">
+    <div class="typing-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="shareModalOverlay">
+    <div class="modal-content share-modal">
+      <div class="modal-header">
+        <h2>Publish Chat</h2>
+        <button class="modal-close" id="shareModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="shareType">Share Type:</label>
+          <select id="shareType" class="form-input">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="chatURL">Chat URL:</label>
+          <input type="text" id="chatURL" class="form-input" readonly>
+        </div>
+        <div class="info-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Don't share personal information or third-party content without permission, and see our Usage Policy.</span>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="copyLinkBtn">Copy Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Artifact Modal -->
+  <div class="modal-overlay" id="newArtifactModalOverlay">
+    <div class="modal-content new-artifact-modal">
+      <div class="modal-header">
+        <h2>Create New Artifact</h2>
+        <button class="modal-close" id="newArtifactModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="newArtifactForm">
+          <div class="form-group">
+            <label for="artifactTitle">Title</label>
+            <input type="text" id="artifactTitle" class="form-input" placeholder="Enter artifact title..." required>
+          </div>
+          <div class="form-group">
+            <label for="artifactDescription">Description</label>
+            <textarea id="artifactDescription" class="form-input" placeholder="Enter description..." rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="artifactType">Type</label>
+            <select id="artifactType" class="form-input" required>
+              <option value="">Select type...</option>
+              <option value="html">HTML Snippet</option>
+              <option value="css">CSS Module</option>
+              <option value="javascript">JavaScript Module</option>
+              <option value="template">Template</option>
+              <option value="component">Component</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="artifactContent">Content</label>
+            <textarea id="artifactContent" class="form-input artifact-content-input" placeholder="Enter your code or content..." rows="10" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelArtifactBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveArtifactBtn">Create Artifact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Overlay Menu -->
+  <div class="profile-overlay-menu" id="profileOverlayMenu">
+    <!-- User Info Section -->
+    <div class="profile-menu-header">
+      <div class="profile-email">ujang.fahmi@example.com</div>
+      <div class="profile-user-info">
+        <div class="profile-avatar">
+          <div class="avatar-circle">UF</div>
+        </div>
+        <div class="profile-user-details">
+          <div class="profile-name">
+            <span>ujang fahmi</span>
+            <i class="fas fa-check profile-check"></i>
+          </div>
+          <div class="profile-plan">Free plan</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Menu Items -->
+    <div class="profile-menu-items">
+      <div class="profile-menu-item" data-action="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </div>
+      
+      <div class="profile-menu-item" data-action="language">
+        <i class="fas fa-globe"></i>
+        <span>Language</span>
+        <i class="fas fa-chevron-right profile-arrow"></i>
+      </div>
+      
+      <div class="profile-menu-item" data-action="help">
+        <i class="fas fa-question-circle"></i>
+        <span>Get help</span>
+      </div>
+      
+      <div class="profile-menu-divider"></div>
+      
+      <div class="profile-menu-item" data-action="upgrade">
+        <i class="fas fa-crown"></i>
+        <span>Upgrade plan</span>
+      </div>
+      
+      <div class="profile-menu-item" data-action="learn">
+        <i class="fas fa-book"></i>
+        <span>Learn more</span>
+        <i class="fas fa-chevron-right profile-arrow"></i>
+      </div>
+      
+      <div class="profile-menu-divider"></div>
+      
+      <div class="profile-menu-item" data-action="logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Log out</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
+
 </html>
