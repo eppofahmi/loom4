@@ -121,21 +121,60 @@ document.addEventListener("DOMContentLoaded", function () {
       title: "Website Redesign",
       description: "Complete redesign of company website with modern UI/UX",
       status: "active",
-      lastActive: "2024-01-15"
+      lastActive: "2024-01-15",
+      members: 4,
+      tasks: 12,
+      completion: 75
     },
     {
       id: 2,
       title: "Mobile App Development",
       description: "Building a cross-platform mobile app for iOS and Android",
       status: "active",
-      lastActive: "2024-01-10"
+      lastActive: "2024-01-10",
+      members: 6,
+      tasks: 24,
+      completion: 45
     },
     {
       id: 3,
       title: "Marketing Campaign",
       description: "Q3 marketing campaign for new product launch",
       status: "planned",
-      lastActive: ""
+      lastActive: "2024-01-08",
+      members: 3,
+      tasks: 8,
+      completion: 25
+    },
+    {
+      id: 4,
+      title: "API Documentation",
+      description: "Comprehensive API documentation for developers",
+      status: "completed",
+      lastActive: "2024-01-05",
+      members: 2,
+      tasks: 15,
+      completion: 100
+    },
+    {
+      id: 5,
+      title: "User Research Study",
+      description: "Conduct user interviews and usability testing",
+      status: "active",
+      lastActive: "2024-01-12",
+      members: 5,
+      tasks: 18,
+      completion: 60
+    },
+    {
+      id: 6,
+      title: "Database Migration",
+      description: "Migrate legacy database to new cloud infrastructure",
+      status: "planned",
+      lastActive: "2024-01-03",
+      members: 3,
+      tasks: 10,
+      completion: 15
     }
   ];
 
@@ -345,6 +384,55 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   ];
 
+  // Sample knowledge sources data
+  let knowledgeSources = [
+    {
+      id: 1,
+      title: "Company Documentation",
+      type: "file",
+      description: "Internal company docs, policies, and procedures uploaded from shared drive",
+      lastUpdated: "2024-01-20T14:30:00",
+      status: "connected",
+      sourceInfo: "Google Drive - 47 documents"
+    },
+    {
+      id: 2,
+      title: "Product Knowledge Base",
+      type: "web",
+      description: "External product documentation and API references from our website",
+      lastUpdated: "2024-01-19T09:15:00", 
+      status: "connected",
+      sourceInfo: "Website crawl - 23 pages"
+    },
+    {
+      id: 3,
+      title: "Customer Database",
+      type: "database",
+      description: "Customer information and support ticket history for context",
+      lastUpdated: "2024-01-18T16:45:00",
+      status: "connected", 
+      sourceInfo: "PostgreSQL - 3 tables"
+    },
+    {
+      id: 4,
+      title: "Support Ticket API",
+      type: "api",
+      description: "Live connection to support system for real-time ticket information",
+      lastUpdated: "2024-01-17T11:20:00",
+      status: "connected",
+      sourceInfo: "REST API - 2 endpoints"
+    },
+    {
+      id: 5,
+      title: "Training Materials",
+      type: "file", 
+      description: "Employee training videos, manuals, and onboarding documents",
+      lastUpdated: "2024-01-15T13:10:00",
+      status: "pending",
+      sourceInfo: "SharePoint - 12 files"
+    }
+  ];
+
   let currentChatId = null;
   let currentSection = 'chat';
   let selectedChatIds = new Set();
@@ -364,48 +452,256 @@ document.addEventListener("DOMContentLoaded", function () {
   let showAllArtifacts = false;
   const INITIAL_ARTIFACTS_LIMIT = 10;
 
+  // Connect page state
+  let filteredKnowledgeSources = [...knowledgeSources];
+  let showAllKnowledgeSources = false;
+  const INITIAL_KNOWLEDGE_LIMIT = 10;
+
+  // Projects page state
+  let filteredProjects = [...projects];
+  let showAllProjects = false;
+  const INITIAL_PROJECTS_LIMIT = 10;
+
   // Render projects in the projects section
   function renderProjects() {
     const projectsGrid = document.getElementById('projectsGrid');
+    const projectsViewAll = document.getElementById('projectsViewAll');
     if (!projectsGrid) return;
 
     projectsGrid.innerHTML = '';
 
-    projects.forEach(project => {
-      const projectCard = document.createElement('div');
-      projectCard.className = 'project-card';
-      projectCard.innerHTML = `
-        <div class="project-card-header">
-          <div class="project-card-title">${project.title}</div>
-          <div class="project-card-status ${project.status}">${project.status}</div>
-        </div>
-        <div class="project-card-description">${project.description}</div>
-        <div class="project-meta">Last active: ${project.lastActive || 'Never'}</div>
-        <div class="project-actions">
-          <button class="start-chat-btn" data-project-id="${project.id}">
-            <i class="fas fa-comments"></i>
-            Start Chat
-          </button>
+    if (filteredProjects.length === 0) {
+      projectsGrid.innerHTML = `
+        <div class="projects-empty-state">
+          <h3>No projects found</h3>
+          <p>Try adjusting your search or create a new project.</p>
         </div>
       `;
+      // Hide view all button when no projects
+      if (projectsViewAll) {
+        projectsViewAll.style.display = 'none';
+      }
+      return;
+    }
+
+    // Determine projects to display
+    const projectsToDisplay = showAllProjects ? filteredProjects : filteredProjects.slice(0, INITIAL_PROJECTS_LIMIT);
+
+    projectsToDisplay.forEach(project => {
+      const projectCard = createProjectCard(project);
       projectsGrid.appendChild(projectCard);
     });
 
-    // Add event listeners for start chat buttons
-    document.querySelectorAll('.start-chat-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const projectId = parseInt(btn.dataset.projectId);
-        const project = projects.find(p => p.id === projectId);
-        if (project) {
-          // Switch to chat section and start a new chat about the project
-          showSection('chat');
-          addNewChat();
-          // Pre-fill the input with project context
-          messageInput.value = `I'd like to discuss the "${project.title}" project.`;
-          sendButton.disabled = false;
+    // Setup menu event listeners
+    setupProjectMenus();
+    
+    // Update projects count
+    updateProjectsCount();
+    
+    // Show/hide View All button
+    if (projectsViewAll) {
+      if (filteredProjects.length > INITIAL_PROJECTS_LIMIT && !showAllProjects) {
+        projectsViewAll.style.display = 'block';
+      } else {
+        projectsViewAll.style.display = 'none';
+      }
+    }
+  }
+
+  // Create project card element
+  function createProjectCard(project) {
+    const projectCard = document.createElement('div');
+    projectCard.className = 'project-card';
+    
+    // Format the updated date
+    const updatedDate = formatProjectDate(project.lastActive);
+    
+    projectCard.innerHTML = `
+      <div class="project-card-content">
+        <div class="project-card-title">${project.title}</div>
+        <div class="project-card-description">${project.description}</div>
+        <div class="project-card-updated">Updated at: ${updatedDate}</div>
+      </div>
+      <div class="project-card-menu" data-project-id="${project.id}">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+        <div class="project-menu-dropdown">
+          <div class="project-menu-item" data-action="view">
+            <i class="fa-solid fa-eye"></i>
+            View
+          </div>
+          <div class="project-menu-item" data-action="edit">
+            <i class="fa-solid fa-edit"></i>
+            Edit
+          </div>
+          <div class="project-menu-item delete" data-action="delete">
+            <i class="fa-solid fa-trash"></i>
+            Delete
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add click event to open project (excluding menu clicks)
+    projectCard.addEventListener('click', (e) => {
+      if (!e.target.closest('.project-card-menu')) {
+        console.log('Opening project:', project.id);
+        // Add project opening logic here
+      }
+    });
+
+    return projectCard;
+  }
+
+  // Format project date for display
+  function formatProjectDate(dateStr) {
+    const date = new Date(dateStr);
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  // Setup project menu event listeners
+  function setupProjectMenus() {
+    // Toggle menu dropdowns
+    document.querySelectorAll('.project-card-menu').forEach(menu => {
+      menu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Close all other menus and remove z-index classes
+        document.querySelectorAll('.project-menu-dropdown').forEach(dropdown => {
+          if (dropdown !== menu.querySelector('.project-menu-dropdown')) {
+            dropdown.classList.remove('active');
+            // Remove z-index elevation from other cards
+            const otherCard = dropdown.closest('.project-card');
+            if (otherCard) {
+              otherCard.classList.remove('menu-active');
+            }
+          }
+        });
+        
+        // Toggle current menu
+        const dropdown = menu.querySelector('.project-menu-dropdown');
+        const currentCard = menu.closest('.project-card');
+        
+        if (dropdown.classList.contains('active')) {
+          dropdown.classList.remove('active');
+          currentCard.classList.remove('menu-active');
+        } else {
+          dropdown.classList.add('active');
+          currentCard.classList.add('menu-active');
         }
       });
     });
+
+    // Handle menu item clicks
+    document.querySelectorAll('.project-menu-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        const action = item.dataset.action;
+        const menu = item.closest('.project-card-menu');
+        const projectId = parseInt(menu.dataset.projectId);
+        const project = projects.find(p => p.id === projectId);
+        
+        // Close menu and remove z-index elevation
+        menu.querySelector('.project-menu-dropdown').classList.remove('active');
+        const menuCard = menu.closest('.project-card');
+        if (menuCard) {
+          menuCard.classList.remove('menu-active');
+        }
+        
+        switch (action) {
+          case 'view':
+            console.log('Viewing project:', projectId);
+            // Add project viewing logic here
+            break;
+          case 'edit':
+            if (project) {
+              // Switch to chat section and start a new chat about editing the project
+              showSection('chat');
+              hideChatListPanel();
+              addNewChat();
+              // Pre-fill the input with project editing context
+              messageInput.value = `I'd like to edit the "${project.title}" project.`;
+              sendButton.disabled = false;
+            }
+            break;
+          case 'delete':
+            handleProjectAction('delete', projectId);
+            break;
+        }
+      });
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.project-menu-dropdown').forEach(dropdown => {
+        dropdown.classList.remove('active');
+        // Remove z-index elevation from all cards
+        const card = dropdown.closest('.project-card');
+        if (card) {
+          card.classList.remove('menu-active');
+        }
+      });
+    });
+  }
+
+  // Handle project menu actions
+  function handleProjectAction(action, projectId) {
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    switch(action) {
+      case 'rename':
+        console.log('Renaming project:', projectId);
+        // Add rename logic here
+        break;
+      case 'duplicate':
+        console.log('Duplicating project:', projectId);
+        // Add duplicate logic here
+        break;
+      case 'archive':
+        console.log('Archiving project:', projectId);
+        // Add archive logic here
+        break;
+      case 'delete':
+        if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
+          const index = projects.findIndex(p => p.id === projectId);
+          if (index > -1) {
+            projects.splice(index, 1);
+            filteredProjects = filteredProjects.filter(p => p.id !== projectId);
+            renderProjects();
+          }
+        }
+        break;
+    }
+  }
+
+  // Update projects count
+  function updateProjectsCount() {
+    const projectsCountText = document.getElementById('projectsCountText');
+    if (projectsCountText) {
+      projectsCountText.textContent = `You have ${projects.length} projects with Loom4`;
+    }
+  }
+
+  // Filter projects based on search
+  function filterProjects(searchTerm) {
+    if (!searchTerm.trim()) {
+      filteredProjects = [...projects];
+    } else {
+      filteredProjects = projects.filter(project => 
+        project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    showAllProjects = false; // Reset pagination when filtering
+    renderProjects();
   }
 
   // Reusable pagination utility for any list
@@ -589,6 +885,77 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Render knowledge sources in the connect section
+  function renderKnowledgeSources() {
+    const connectItemsList = document.getElementById('connectItemsList');
+    if (!connectItemsList) return;
+
+    // Clear existing content
+    connectItemsList.innerHTML = '';
+
+    // Determine how many items to show
+    const sourcesToShow = showAllKnowledgeSources ? filteredKnowledgeSources : filteredKnowledgeSources.slice(0, INITIAL_KNOWLEDGE_LIMIT);
+
+    // Render knowledge source items
+    sourcesToShow.forEach(source => {
+      const sourceItem = document.createElement('div');
+      sourceItem.className = 'connect-list-item';
+      sourceItem.innerHTML = `
+        <input type="checkbox" class="connect-item-checkbox" data-source-id="${source.id}">
+        <div class="connect-item-content">
+          <div class="connect-item-title">${source.title}</div>
+          <div class="connect-item-description">${source.description}</div>
+          <div class="connect-item-meta">
+            <span class="connect-item-type ${source.type}">${source.type}</span>
+            <span>•</span>
+            <span>${source.sourceInfo}</span>
+            <span>•</span>
+            <span>${formatTimeAgo(source.lastUpdated)}</span>
+          </div>
+        </div>
+        <div class="connect-item-actions">
+          <button class="connect-item-rename" data-source-id="${source.id}" title="Rename">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="connect-item-delete" data-source-id="${source.id}" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
+
+      // Add click event to open/edit source
+      sourceItem.addEventListener('click', (e) => {
+        if (e.target.type !== 'checkbox' && !e.target.closest('.connect-item-actions')) {
+          // Handle opening/editing knowledge source
+          console.log('Opening knowledge source:', source.id);
+        }
+      });
+
+      connectItemsList.appendChild(sourceItem);
+    });
+
+    // Update count text
+    updateKnowledgeSourcesCount();
+    
+    // Show/hide View All button
+    const connectViewAll = document.getElementById('connectViewAll');
+    if (connectViewAll) {
+      if (filteredKnowledgeSources.length > INITIAL_KNOWLEDGE_LIMIT && !showAllKnowledgeSources) {
+        connectViewAll.style.display = 'block';
+      } else {
+        connectViewAll.style.display = 'none';
+      }
+    }
+  }
+
+  // Update knowledge sources count
+  function updateKnowledgeSourcesCount() {
+    const connectCountText = document.getElementById('connectCountText');
+    if (connectCountText) {
+      connectCountText.textContent = `You have ${knowledgeSources.length} knowledge sources connected with Loom4`;
+    }
+  }
+
   // Show specific section and update navigation
   function showSection(sectionName) {
     currentSection = sectionName;
@@ -623,6 +990,30 @@ document.addEventListener("DOMContentLoaded", function () {
       if (expandArtifactBtn && !isArtifactViewerOpen) {
         expandArtifactBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
         expandArtifactBtn.title = 'Expand Artifact Viewer';
+      }
+    } else if (sectionName === 'projects') {
+      // Reset projects pagination and filters when entering projects section
+      showAllProjects = false;
+      filteredProjects = [...projects];
+      const projectsSearchInput = document.getElementById('projectsSearchInput');
+      if (projectsSearchInput) {
+        projectsSearchInput.value = '';
+      }
+    } else if (sectionName === 'artifacts') {
+      // Reset artifacts pagination and filters when entering artifacts section
+      showAllArtifacts = false;
+      filteredArtifacts = [...artifacts];
+      const artifactsSearchInput = document.getElementById('artifactsSearchInput');
+      if (artifactsSearchInput) {
+        artifactsSearchInput.value = '';
+      }
+    } else if (sectionName === 'connect') {
+      // Reset connect pagination and filters when entering connect section
+      showAllKnowledgeSources = false;
+      filteredKnowledgeSources = [...knowledgeSources];
+      const connectSearchInput = document.getElementById('connectSearchInput');
+      if (connectSearchInput) {
+        connectSearchInput.value = '';
       }
     } else {
       // Clean up chat-specific UI state when leaving chat section
@@ -682,14 +1073,19 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="chat-item-preview">${chat.lastMessage}</div>
           <div class="chat-item-time">${formatTimeAgo(chat.timestamp)}</div>
         </div>
-        <button class="chat-item-delete" data-chat-id="${chat.id}">
-          <i class="fas fa-trash"></i>
-        </button>
+        <div class="chat-item-actions">
+          <button class="chat-item-rename" data-chat-id="${chat.id}" title="Rename">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="chat-item-delete" data-chat-id="${chat.id}" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
       `;
 
       // Add click event to open chat
       chatItem.addEventListener('click', (e) => {
-        if (e.target.type !== 'checkbox' && !e.target.closest('.chat-item-delete')) {
+        if (e.target.type !== 'checkbox' && !e.target.closest('.chat-item-actions')) {
           openChatFromList(chat.id);
         }
       });
@@ -766,6 +1162,15 @@ document.addEventListener("DOMContentLoaded", function () {
           selectedChatIds.delete(chatId);
         }
         updateSelectionControls();
+      });
+    });
+
+    // Rename buttons
+    document.querySelectorAll('.chat-item-rename').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const chatId = parseInt(btn.dataset.chatId);
+        startRename(chatId, 'list');
       });
     });
 
@@ -1324,6 +1729,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderChatHistory();
     renderProjects();
     renderArtifacts();
+    renderKnowledgeSources();
     setupEventListeners();
     loadSavedData();
     showSection('chat');
@@ -1392,6 +1798,9 @@ document.addEventListener("DOMContentLoaded", function () {
       chatItem.innerHTML = `
         <div class="chat-item-content">${chat.title}</div>
         <div class="chat-item-actions">
+          <button class="chat-action-btn rename" title="Rename" data-chat-id="${chat.id}">
+            <i class="fas fa-edit"></i>
+          </button>
           <button class="chat-action-btn delete" title="Delete" data-chat-id="${chat.id}">
             <i class="fas fa-trash"></i>
           </button>
@@ -1442,6 +1851,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const chatId = parseInt(btn.dataset.chatId);
         if (btn.classList.contains('delete')) {
           deleteChat(chatId);
+        } else if (btn.classList.contains('rename')) {
+          startRename(chatId, 'sidebar');
         }
       });
     });
@@ -1467,6 +1878,158 @@ document.addEventListener("DOMContentLoaded", function () {
       updateSidebarViewAllButton();
       saveData();
     }
+  }
+
+  // Start rename process
+  function startRename(chatId, source) {
+    const chat = chats.find(c => c.id === chatId);
+    if (!chat) return;
+    
+    // Find the appropriate element based on source
+    let titleElement;
+    if (source === 'list') {
+      // Find in chat list panel
+      titleElement = document.querySelector(`[data-chat-id="${chatId}"]`).closest('.chat-list-item').querySelector('.chat-item-title');
+    } else {
+      // Find in sidebar
+      titleElement = document.querySelector(`[data-chat-id="${chatId}"]`).closest('.chat-item').querySelector('.chat-item-content');
+    }
+    
+    if (!titleElement) return;
+    
+    // Store original title
+    const originalTitle = chat.title;
+    
+    // Create input field
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalTitle;
+    input.className = 'chat-rename-input';
+    input.style.cssText = `
+      width: 100%;
+      padding: 4px 8px;
+      border: 1px solid #3b82f6;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      background: white;
+      color: #1f2937;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    `;
+    
+    // Create confirm/cancel buttons
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'rename-buttons';
+    buttonContainer.style.cssText = `
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    `;
+    
+    const confirmBtn = document.createElement('button');
+    confirmBtn.innerHTML = '<i class="fas fa-check"></i>';
+    confirmBtn.className = 'rename-confirm-btn';
+    confirmBtn.title = 'Confirm';
+    confirmBtn.style.cssText = `
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      background: #10b981;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.innerHTML = '<i class="fas fa-times"></i>';
+    cancelBtn.className = 'rename-cancel-btn';
+    cancelBtn.title = 'Cancel';
+    cancelBtn.style.cssText = `
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      background: #ef4444;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+    
+    // Store original content
+    const originalContent = titleElement.innerHTML;
+    
+    // Create wrapper for input and buttons
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(input);
+    wrapper.appendChild(buttonContainer);
+    buttonContainer.appendChild(confirmBtn);
+    buttonContainer.appendChild(cancelBtn);
+    
+    // Replace content with input
+    titleElement.innerHTML = '';
+    titleElement.appendChild(wrapper);
+    
+    // Focus and select text
+    input.focus();
+    input.select();
+    
+    // Handle confirm
+    const confirmRename = () => {
+      const newTitle = input.value.trim();
+      if (newTitle && newTitle !== originalTitle) {
+        chat.title = newTitle;
+        saveData();
+        renderChatHistory();
+        renderChatListItems();
+        updateChatTitle(); // Update header if this is the current chat
+      }
+      titleElement.innerHTML = originalContent;
+      // Update the displayed title
+      if (source === 'list') {
+        titleElement.textContent = chat.title;
+      } else {
+        titleElement.textContent = chat.title;
+      }
+    };
+    
+    // Handle cancel
+    const cancelRename = () => {
+      titleElement.innerHTML = originalContent;
+    };
+    
+    // Event listeners
+    confirmBtn.addEventListener('click', confirmRename);
+    cancelBtn.addEventListener('click', cancelRename);
+    
+    // Enter key to confirm, Escape to cancel
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmRename();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        cancelRename();
+      }
+    });
+    
+    // Click outside to cancel
+    const handleClickOutside = (e) => {
+      if (!wrapper.contains(e.target)) {
+        cancelRename();
+        document.removeEventListener('click', handleClickOutside);
+      }
+    };
+    
+    // Add click outside listener after a brief delay
+    setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 100);
   }
 
   // Open chat
@@ -1570,27 +2133,77 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // Connect section buttons
-    document.querySelectorAll('.connect-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const card = e.target.closest('.connect-card');
-        const connectionType = card.dataset.connectionType;
-        alert(`Connecting to ${connectionType}... (Feature coming soon)`);
+    // Add Knowledge button
+    const addKnowledgeBtn = document.getElementById('addKnowledgeBtn');
+    if (addKnowledgeBtn) {
+      addKnowledgeBtn.addEventListener('click', () => {
+        alert('Add Knowledge functionality coming soon!');
       });
-    });
+    }
 
-    // Add Project button
-    const addProjectBtn = document.getElementById('addProjectBtn');
-    if (addProjectBtn) {
-      addProjectBtn.addEventListener('click', () => {
+    // Connect search
+    const connectSearchInput = document.getElementById('connectSearchInput');
+    if (connectSearchInput) {
+      connectSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        if (searchTerm.trim() === '') {
+          filteredKnowledgeSources = [...knowledgeSources];
+        } else {
+          filteredKnowledgeSources = knowledgeSources.filter(source => 
+            source.title.toLowerCase().includes(searchTerm) ||
+            source.description.toLowerCase().includes(searchTerm) ||
+            source.type.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        renderKnowledgeSources();
+      });
+    }
+
+    // Connect View All button
+    const connectViewAllBtn = document.getElementById('connectViewAllBtn');
+    if (connectViewAllBtn) {
+      connectViewAllBtn.addEventListener('click', () => {
+        showAllKnowledgeSources = true;
+        renderKnowledgeSources();
+      });
+    }
+
+    // New Project button
+    const newProjectBtn = document.getElementById('newProjectBtn');
+    if (newProjectBtn) {
+      newProjectBtn.addEventListener('click', () => {
         const newProject = {
           id: Date.now(),
           title: "New Project",
           description: "Project description",
           status: "planned",
-          lastActive: new Date().toISOString().split('T')[0]
+          lastActive: new Date().toISOString().split('T')[0],
+          members: 1,
+          tasks: 0,
+          completion: 0
         };
         projects.unshift(newProject);
+        filteredProjects = [...projects];
+        renderProjects();
+      });
+    }
+
+    // Projects search
+    const projectsSearchInput = document.getElementById('projectsSearchInput');
+    if (projectsSearchInput) {
+      projectsSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value;
+        filterProjects(searchTerm);
+      });
+    }
+
+    // Projects View All button
+    const projectsViewAllBtn = document.getElementById('projectsViewAllBtn');
+    if (projectsViewAllBtn) {
+      projectsViewAllBtn.addEventListener('click', () => {
+        showAllProjects = true;
         renderProjects();
       });
     }
@@ -1890,6 +2503,15 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener('click', function(e) {
       if (profileOverlayMenu && !profileToggle.contains(e.target) && !profileOverlayMenu.contains(e.target)) {
         profileOverlayMenu.classList.remove('active');
+      }
+    });
+
+    // Close project menus when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.project-card-menu')) {
+        document.querySelectorAll('.project-menu-dropdown').forEach(dropdown => {
+          dropdown.classList.remove('active');
+        });
       }
     });
   }

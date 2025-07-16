@@ -82,74 +82,87 @@
       
       <!-- Projects Section -->
       <div class="content-section" id="projects-section">
-        <div class="section-container">
-          <div class="section-header">
-            <h2>Projects</h2>
-            <button class="add-btn" id="addProjectBtn">
-              <i class="fas fa-plus"></i>
-              Add Project
-            </button>
+        <div class="projects-page-container">
+          <!-- Page Header -->
+          <div class="projects-page-header">
+            <div class="projects-page-title">
+              <h1>Projects</h1>
+              <p class="projects-page-subtitle">Manage your AI-powered project spaces with Loom4</p>
+            </div>
           </div>
-          <div class="projects-grid" id="projectsGrid">
-            <!-- Projects will be populated here -->
+
+          <!-- Toolbar Section -->
+          <div class="projects-toolbar">
+            <div class="projects-toolbar-left">
+              <div class="projects-count">
+                <span id="projectsCountText">You have 0 projects with Loom4</span>
+              </div>
+            </div>
+            <div class="projects-toolbar-right">
+              <div class="projects-search">
+                <div class="search-input-container">
+                  <i class="fa-solid fa-search search-icon"></i>
+                  <input type="text" id="projectsSearchInput" placeholder="Search projects..." class="search-input">
+                </div>
+              </div>
+              <button class="new-project-btn" id="newProjectBtn">
+                <i class="fa-solid fa-plus"></i>
+                New Project
+              </button>
+            </div>
+          </div>
+
+          <!-- Projects Grid/List -->
+          <div class="projects-container" id="projectsContainer">
+            <div class="projects-grid" id="projectsGrid">
+              <!-- Projects will be populated here -->
+            </div>
+            <div class="projects-view-all" id="projectsViewAll" style="display: none;">
+              <button class="view-all-btn" id="projectsViewAllBtn">View All</button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Connect Section -->
       <div class="content-section" id="connect-section">
-        <div class="section-container">
-          <div class="section-header">
-            <h2>Knowledge Base</h2>
-            <p>Connect your data sources to enhance AI conversations</p>
+        <div class="connect-page-container">
+          <!-- Page Header -->
+          <div class="connect-page-header">
+            <div class="connect-page-title">
+              <h1>Knowledge Base</h1>
+              <p class="connect-page-subtitle">Connect your data sources to enhance AI conversations</p>
+            </div>
           </div>
-          <div class="connect-grid">
-            <!-- File Connection Card -->
-            <div class="connect-card" data-connection-type="file">
-              <div class="connect-card-header">
-                <div class="connect-icon file-icon">
-                  <i class="fas fa-file-upload"></i>
-                </div>
-                <h3>Files</h3>
-              </div>
-              <p>Upload documents, PDFs, and other files</p>
-              <button class="connect-btn">Connect Files</button>
-            </div>
 
-            <!-- Web Connection Card -->
-            <div class="connect-card" data-connection-type="web">
-              <div class="connect-card-header">
-                <div class="connect-icon url-icon">
-                  <i class="fas fa-globe"></i>
-                </div>
-                <h3>Web Content</h3>
+          <!-- Toolbar Section -->
+          <div class="connect-toolbar">
+            <div class="connect-toolbar-left">
+              <div class="connect-count">
+                <span id="connectCountText">You have 0 knowledge sources connected with Loom4</span>
               </div>
-              <p>Connect to websites and online resources</p>
-              <button class="connect-btn">Connect Website</button>
             </div>
-
-            <!-- Database Connection Card -->
-            <div class="connect-card" data-connection-type="database">
-              <div class="connect-card-header">
-                <div class="connect-icon database-icon">
-                  <i class="fas fa-database"></i>
+            <div class="connect-toolbar-right">
+              <div class="connect-search">
+                <div class="search-input-container">
+                  <i class="fa-solid fa-search search-icon"></i>
+                  <input type="text" id="connectSearchInput" placeholder="Search knowledge sources..." class="search-input">
                 </div>
-                <h3>Database</h3>
               </div>
-              <p>Connect to your SQL or NoSQL databases</p>
-              <button class="connect-btn">Connect Database</button>
+              <button class="add-knowledge-btn" id="addKnowledgeBtn">
+                <i class="fa-solid fa-plus"></i>
+                Add Knowledge
+              </button>
             </div>
+          </div>
 
-            <!-- API Connection Card -->
-            <div class="connect-card" data-connection-type="api">
-              <div class="connect-card-header">
-                <div class="connect-icon api-icon">
-                  <i class="fa-solid fa-plug"></i>
-                </div>
-                <h3>API</h3>
-              </div>
-              <p>Connect to REST or GraphQL APIs</p>
-              <button class="connect-btn">Configure API</button>
+          <!-- Connect List -->
+          <div class="connect-container" id="connectContainer">
+            <div class="connect-items-list" id="connectItemsList">
+              <!-- Connect items will be populated here -->
+            </div>
+            <div class="connect-view-all" id="connectViewAll" style="display: none;">
+              <button class="view-all-btn" id="connectViewAllBtn">View All</button>
             </div>
           </div>
         </div>
