@@ -966,6 +966,11 @@ document.addEventListener("DOMContentLoaded", function () {
       cleanupChatState();
     }
 
+    // Check for pending chat message when entering chat section
+    if (sectionName === 'chat') {
+      checkAndInjectPendingMessage();
+    }
+
     // Hide all content sections
     document.querySelectorAll('.content-section').forEach(section => {
       section.classList.remove('active');
@@ -2029,6 +2034,443 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Add Project page functions
+  function showAddProjectPage() {
+    const projectsPageContainer = document.querySelector('.projects-page-container');
+    const addProjectPage = document.getElementById('addProjectPage');
+    
+    if (projectsPageContainer && addProjectPage) {
+      projectsPageContainer.style.display = 'none';
+      addProjectPage.style.display = 'block';
+      
+      // Clear previous data
+      resetAddProjectForm();
+      
+      // Render available knowledge sources
+      renderKnowledgeSelectionList();
+      
+      // Focus on project name input
+      const projectNameInput = document.getElementById('projectName');
+      if (projectNameInput) {
+        setTimeout(() => projectNameInput.focus(), 100);
+      }
+    }
+  }
+
+  function hideAddProjectPage() {
+    const projectsPageContainer = document.querySelector('.projects-page-container');
+    const addProjectPage = document.getElementById('addProjectPage');
+    
+    if (projectsPageContainer && addProjectPage) {
+      projectsPageContainer.style.display = 'block';
+      addProjectPage.style.display = 'none';
+      
+      // Clear form data
+      resetAddProjectForm();
+    }
+  }
+
+  function resetAddProjectForm() {
+    const form = document.getElementById('projectSetupForm');
+    if (form) {
+      form.reset();
+    }
+    
+    // Clear selected knowledge sources
+    selectedKnowledgeSources.clear();
+    
+    // Reset message input
+    const messageInput = document.getElementById('projectMessageInput');
+    if (messageInput) {
+      messageInput.value = '';
+      updateProjectSendButton();
+    }
+    
+    // Reset project overview
+    updateProjectOverview();
+    
+    // Clear chat history
+    clearProjectChatHistory();
+  }
+
+  // Update project overview display
+  function updateProjectOverview() {
+    const projectName = document.getElementById('projectName').value.trim();
+    const projectDescription = document.getElementById('projectDescription').value.trim();
+    
+    const overviewName = document.getElementById('projectOverviewName');
+    const overviewDescription = document.getElementById('projectOverviewDescription');
+    
+    if (overviewName) {
+      overviewName.textContent = projectName || 'Untitled Project';
+    }
+    
+    if (overviewDescription) {
+      if (projectDescription) {
+        // Get first 6 words and add ellipsis if needed
+        const words = projectDescription.split(' ');
+        const truncated = words.slice(0, 6).join(' ');
+        overviewDescription.textContent = words.length > 6 ? truncated + '...' : truncated;
+      } else {
+        overviewDescription.textContent = 'No description provided...';
+      }
+    }
+  }
+
+  // Project chat history management
+  let projectChatHistory = [];
+
+  function addToProjectChatHistory(message) {
+    const chatItem = {
+      id: generateId(),
+      message: message,
+      timestamp: new Date().toISOString(),
+      preview: message.substring(0, 50) + (message.length > 50 ? '...' : '')
+    };
+    
+    projectChatHistory.unshift(chatItem);
+    renderProjectChatHistory();
+  }
+
+  function renderProjectChatHistory() {
+    const chatHistoryList = document.getElementById('projectChatHistoryList');
+    if (!chatHistoryList) return;
+    
+    if (projectChatHistory.length === 0) {
+      chatHistoryList.innerHTML = `
+        <div class="chat-history-empty">
+          <i class="fa-solid fa-message"></i>
+          <p>No messages yet. Start your first conversation above.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    chatHistoryList.innerHTML = projectChatHistory.map(item => `
+      <div class="chat-history-item" data-chat-id="${item.id}">
+        <div class="chat-history-item-title">${item.preview}</div>
+        <div class="chat-history-item-preview">${item.message}</div>
+        <div class="chat-history-item-time">${formatTimeAgo(item.timestamp)}</div>
+      </div>
+    `).join('');
+  }
+
+  function clearProjectChatHistory() {
+    projectChatHistory = [];
+    renderProjectChatHistory();
+  }
+
+  function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - time) / 1000);
+    
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  }
+
+  // Knowledge selection management
+  let selectedKnowledgeSources = new Set();
+
+  function renderKnowledgeSelectionList() {
+    const container = document.getElementById('knowledgeSelectionContainer');
+    const placeholder = document.getElementById('knowledgePlaceholder');
+    
+    if (!container) return;
+    
+    // Get available knowledge sources (mock data for now)
+    const availableKnowledge = getAvailableKnowledgeSources();
+    
+    if (availableKnowledge.length === 0) {
+      placeholder.style.display = 'flex';
+      // Remove any existing list
+      const existingList = container.querySelector('.knowledge-selection-list');
+      if (existingList) {
+        existingList.remove();
+      }
+      return;
+    }
+    
+    placeholder.style.display = 'none';
+    
+    // Create or update knowledge selection list
+    let listContainer = container.querySelector('.knowledge-selection-list');
+    if (!listContainer) {
+      listContainer = document.createElement('div');
+      listContainer.className = 'knowledge-selection-list';
+      container.appendChild(listContainer);
+    }
+    
+    listContainer.innerHTML = '';
+    
+    availableKnowledge.forEach(knowledge => {
+      const item = document.createElement('div');
+      item.className = 'knowledge-selection-item';
+      item.innerHTML = `
+        <input type="checkbox" id="knowledge-${knowledge.id}" ${selectedKnowledgeSources.has(knowledge.id) ? 'checked' : ''}>
+        <div class="knowledge-item-info">
+          <div class="knowledge-item-name">${knowledge.name}</div>
+          <div class="knowledge-item-type">${knowledge.type}</div>
+        </div>
+      `;
+      
+      const checkbox = item.querySelector('input[type="checkbox"]');
+      checkbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          selectedKnowledgeSources.add(knowledge.id);
+          item.classList.add('selected');
+        } else {
+          selectedKnowledgeSources.delete(knowledge.id);
+          item.classList.remove('selected');
+        }
+      });
+      
+      // Handle click on entire item
+      item.addEventListener('click', (e) => {
+        if (e.target.type !== 'checkbox') {
+          checkbox.checked = !checkbox.checked;
+          checkbox.dispatchEvent(new Event('change'));
+        }
+      });
+      
+      if (selectedKnowledgeSources.has(knowledge.id)) {
+        item.classList.add('selected');
+      }
+      
+      listContainer.appendChild(item);
+    });
+  }
+
+  function getAvailableKnowledgeSources() {
+    // Mock data - in real implementation, this would fetch from actual data
+    return [
+      { id: 1, name: 'Project Documentation', type: 'PDF' },
+      { id: 2, name: 'API Reference', type: 'Web URL' },
+      { id: 3, name: 'Database Schema', type: 'Database' },
+      { id: 4, name: 'Meeting Notes', type: 'Google Drive' }
+    ];
+  }
+
+  // Project form handling
+  function updateProjectSendButton() {
+    const messageInput = document.getElementById('projectMessageInput');
+    const sendButton = document.getElementById('projectSendButton');
+    
+    if (messageInput && sendButton) {
+      sendButton.disabled = messageInput.value.trim() === '';
+    }
+  }
+
+  function handleProjectMessageSend() {
+    const messageInput = document.getElementById('projectMessageInput');
+    const projectName = document.getElementById('projectName').value.trim();
+    const projectDescription = document.getElementById('projectDescription').value.trim();
+    const projectInstructions = document.getElementById('projectInstructions').value.trim();
+    const message = messageInput.value.trim();
+    
+    if (!message) return;
+    
+    // Add message to project chat history
+    addToProjectChatHistory(message);
+    
+    // Create project data
+    const projectData = {
+      name: projectName || 'Untitled Project',
+      description: projectDescription,
+      instructions: projectInstructions,
+      knowledgeSources: Array.from(selectedKnowledgeSources),
+      createdAt: new Date().toISOString()
+    };
+    
+    // Save project
+    const savedProject = saveProject(projectData);
+    
+    // Store message and project data for instant injection into main chat
+    const chatMessage = {
+      message: message,
+      projectId: savedProject.id,
+      projectName: savedProject.name,
+      projectInstructions: savedProject.instructions,
+      knowledgeSources: savedProject.knowledgeSources,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Pass message to main chat via localStorage
+    localStorage.setItem('pendingChatMessage', JSON.stringify(chatMessage));
+    
+    // Instant redirect to main chat (no delay, no response handling)
+    showSection('chat');
+    
+    // Clear the message input immediately
+    messageInput.value = '';
+    updateProjectSendButton();
+  }
+
+  function saveProject(projectData) {
+    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    const newProject = {
+      ...projectData,
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    projects.unshift(newProject);
+    localStorage.setItem('projects', JSON.stringify(projects));
+    
+    // Update projects count
+    updateProjectsCount();
+    renderProjects();
+    
+    return newProject;
+  }
+
+  function saveProjectOnly() {
+    const projectName = document.getElementById('projectName').value.trim();
+    const projectDescription = document.getElementById('projectDescription').value.trim();
+    const projectInstructions = document.getElementById('projectInstructions').value.trim();
+    
+    if (!projectName) {
+      showNotification('Please enter a project name', 'error');
+      return;
+    }
+    
+    const projectData = {
+      name: projectName,
+      description: projectDescription,
+      instructions: projectInstructions,
+      knowledgeSources: Array.from(selectedKnowledgeSources),
+      createdAt: new Date().toISOString()
+    };
+    
+    const savedProject = saveProject(projectData);
+    
+    // Navigate back to projects page
+    hideAddProjectPage();
+    showSection('projects');
+    
+    showNotification('Project saved successfully!', 'success');
+  }
+
+  // Tooltip modal functions
+  function showTooltipModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function hideTooltipModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  // Auto-resize textarea
+  function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+  }
+
+  // Check for pending chat message and inject it into main chat
+  function checkAndInjectPendingMessage() {
+    const pendingMessage = localStorage.getItem('pendingChatMessage');
+    if (!pendingMessage) return;
+
+    try {
+      const chatMessage = JSON.parse(pendingMessage);
+      
+      // Create new chat with the pending message
+      const newChatId = generateId();
+      const newChat = {
+        id: newChatId,
+        projectId: chatMessage.projectId,
+        title: chatMessage.message.substring(0, 50) + (chatMessage.message.length > 50 ? '...' : ''),
+        lastMessage: chatMessage.message.substring(0, 50) + (chatMessage.message.length > 50 ? '...' : ''),
+        timestamp: chatMessage.timestamp,
+        projectName: chatMessage.projectName,
+        projectInstructions: chatMessage.projectInstructions,
+        knowledgeSources: chatMessage.knowledgeSources
+      };
+
+      // Add to chats array
+      chats.unshift(newChat);
+      
+      // Update localStorage
+      localStorage.setItem('chats', JSON.stringify(chats));
+      
+      // Set as current chat and load it
+      currentChatId = newChatId;
+      
+      // Update chat title
+      updateChatTitle();
+      
+      // Render chat history to show the new chat
+      renderChatHistory();
+      
+      // Update chat info text
+      updateChatInfoText();
+      
+      // Add the message to chat messages
+      addMessage('user', chatMessage.message);
+      
+      // Show welcome message with project context
+      if (chatMessage.projectName) {
+        showNotification(`Started chat for project: ${chatMessage.projectName}`, 'success');
+      }
+      
+      // Clear the pending message
+      localStorage.removeItem('pendingChatMessage');
+      
+    } catch (error) {
+      console.error('Error processing pending chat message:', error);
+      localStorage.removeItem('pendingChatMessage');
+    }
+  }
+
+  // Show notification function
+  function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="notification-icon ${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    
+    // Add to body
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 100);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 3000);
+  }
+
+  function getNotificationIcon(type) {
+    switch (type) {
+      case 'success': return 'fas fa-check-circle';
+      case 'error': return 'fas fa-exclamation-circle';
+      case 'warning': return 'fas fa-exclamation-triangle';
+      default: return 'fas fa-info-circle';
+    }
+  }
+
   // Initialize the app
   function init() {
     renderChatHistory();
@@ -2489,6 +2931,120 @@ document.addEventListener("DOMContentLoaded", function () {
     const newProjectBtn = document.getElementById('newProjectBtn');
     if (newProjectBtn) {
       newProjectBtn.addEventListener('click', () => {
+        showAddProjectPage();
+      });
+    }
+
+    // Back to Projects button
+    const backToProjectsBtn = document.getElementById('backToProjectsBtn');
+    if (backToProjectsBtn) {
+      backToProjectsBtn.addEventListener('click', () => {
+        hideAddProjectPage();
+      });
+    }
+
+    // Save Project button
+    const saveProjectBtn = document.getElementById('saveProjectBtn');
+    if (saveProjectBtn) {
+      saveProjectBtn.addEventListener('click', () => {
+        saveProjectOnly();
+      });
+    }
+
+    // Project message input
+    const projectMessageInput = document.getElementById('projectMessageInput');
+    if (projectMessageInput) {
+      projectMessageInput.addEventListener('input', () => {
+        updateProjectSendButton();
+        autoResizeTextarea(projectMessageInput);
+      });
+      
+      projectMessageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleProjectMessageSend();
+        }
+      });
+    }
+
+    // Project send button
+    const projectSendButton = document.getElementById('projectSendButton');
+    if (projectSendButton) {
+      projectSendButton.addEventListener('click', () => {
+        handleProjectMessageSend();
+      });
+    }
+
+    // Project name input - update overview dynamically
+    const projectNameInput = document.getElementById('projectName');
+    if (projectNameInput) {
+      projectNameInput.addEventListener('input', () => {
+        updateProjectOverview();
+      });
+    }
+
+    // Project description input - update overview dynamically
+    const projectDescriptionInput = document.getElementById('projectDescription');
+    if (projectDescriptionInput) {
+      projectDescriptionInput.addEventListener('input', () => {
+        updateProjectOverview();
+      });
+    }
+
+    // Add Knowledge inline button
+    const addKnowledgeInlineBtn = document.getElementById('addKnowledgeInlineBtn');
+    if (addKnowledgeInlineBtn) {
+      addKnowledgeInlineBtn.addEventListener('click', () => {
+        showSection('connect');
+        showAddKnowledgePage();
+      });
+    }
+
+    // Instructions tooltip
+    const instructionsTooltip = document.getElementById('instructionsTooltip');
+    if (instructionsTooltip) {
+      instructionsTooltip.addEventListener('click', () => {
+        showTooltipModal('instructionsTooltipModal');
+      });
+    }
+
+    // Instructions tooltip close
+    const instructionsTooltipClose = document.getElementById('instructionsTooltipClose');
+    if (instructionsTooltipClose) {
+      instructionsTooltipClose.addEventListener('click', () => {
+        hideTooltipModal('instructionsTooltipModal');
+      });
+    }
+
+    // Close tooltip modal when clicking outside
+    const instructionsTooltipModal = document.getElementById('instructionsTooltipModal');
+    if (instructionsTooltipModal) {
+      instructionsTooltipModal.addEventListener('click', (e) => {
+        if (e.target === instructionsTooltipModal) {
+          hideTooltipModal('instructionsTooltipModal');
+        }
+      });
+    }
+
+    // Project tool buttons (placeholder functionality)
+    const addProjectToolBtn = document.getElementById('addProjectToolBtn');
+    if (addProjectToolBtn) {
+      addProjectToolBtn.addEventListener('click', () => {
+        showNotification('Add tool functionality coming soon!', 'info');
+      });
+    }
+
+    const projectToolsBtn = document.getElementById('projectToolsBtn');
+    if (projectToolsBtn) {
+      projectToolsBtn.addEventListener('click', () => {
+        showNotification('Tools functionality coming soon!', 'info');
+      });
+    }
+
+    // Legacy New Project button (to be removed)
+    const legacyNewProjectBtn = document.getElementById('legacyNewProjectBtn');
+    if (legacyNewProjectBtn) {
+      legacyNewProjectBtn.addEventListener('click', () => {
         const newProject = {
           id: Date.now(),
           title: "New Project",

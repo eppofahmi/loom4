@@ -122,6 +122,137 @@
             </div>
           </div>
         </div>
+
+        <!-- Add Project Page -->
+        <div class="add-project-page" id="addProjectPage" style="display: none;">
+          <!-- Top Left Back Button -->
+          <div class="add-project-back-nav">
+            <button class="back-nav-btn" id="backToProjectsBtn">
+              <i class="fa-solid fa-arrow-left"></i>
+              All Projects
+            </button>
+          </div>
+
+          <!-- Main Content Grid -->
+          <div class="add-project-grid">
+            <!-- Left Section: Project Settings Form -->
+            <div class="add-project-form-section">
+              <div class="project-form-container">
+                <div class="project-form-header">
+                  <h3>Project Settings</h3>
+                  <button class="save-project-btn" id="saveProjectBtn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Project
+                  </button>
+                </div>
+
+                <form id="projectSetupForm" class="project-form">
+                  <!-- Project Name -->
+                  <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" class="form-input" placeholder="Enter project name..." required>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" class="form-input" placeholder="Brief description of your project..." rows="3"></textarea>
+                  </div>
+
+                  <!-- Instructions (System Prompt) -->
+                  <div class="form-group">
+                    <label for="projectInstructions">
+                      Set project instructions
+                      <button type="button" class="tooltip-btn" id="instructionsTooltip">
+                        <i class="fa-solid fa-circle-info"></i>
+                      </button>
+                    </label>
+                    <textarea id="projectInstructions" class="form-input" placeholder="Optional system prompt to guide AI behavior in this project..." rows="4"></textarea>
+                  </div>
+
+                  <!-- Add Knowledge Section -->
+                  <div class="form-group">
+                    <div class="knowledge-section-header">
+                      <label>Add Knowledge</label>
+                      <button type="button" class="add-knowledge-btn-inline" id="addKnowledgeInlineBtn">
+                        <i class="fa-solid fa-plus"></i>
+                      </button>
+                    </div>
+                    
+                    <div class="knowledge-selection-container" id="knowledgeSelectionContainer">
+                      <!-- Knowledge items will be populated here -->
+                      <div class="knowledge-placeholder" id="knowledgePlaceholder">
+                        <i class="fa-solid fa-book"></i>
+                        <p>No knowledge added yet. Add PDFs, documents, or other text to the project knowledge base that Claude will reference in every project conversation.</p>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Right Section: Project Overview & Chat -->
+            <div class="add-project-overview-section">
+              <!-- Project Overview -->
+              <div class="project-overview">
+                <div class="project-overview-name" id="projectOverviewName">Untitled Project</div>
+                <div class="project-overview-description" id="projectOverviewDescription">No description provided...</div>
+              </div>
+
+              <!-- Chat Input -->
+              <div class="project-chat-container">
+                <div class="add-project-input-wrapper">
+                  <div class="add-project-input">
+                    <!-- Text input row -->
+                    <div class="input-text-row">
+                      <textarea id="projectMessageInput" placeholder="How can I help you today?" rows="1"></textarea>
+                    </div>
+                    
+                    <!-- Controls row -->
+                    <div class="input-controls-row">
+                      <div class="input-left-controls">
+                        <button class="input-control-btn" id="addProjectToolBtn" title="Add tool">
+                          <i class="fa-solid fa-plus"></i>
+                          <span>Add tool</span>
+                        </button>
+                        <button class="input-control-btn" id="projectToolsBtn" title="Tools">
+                          <i class="fa-solid fa-screwdriver-wrench"></i>
+                          <span>Tools</span>
+                        </button>
+                      </div>
+                      
+                      <div class="input-right-controls">
+                        <div class="model-selector">
+                          <select id="projectModelSelect">
+                            <option value="loom4-advanced">Loom4 Advanced</option>
+                            <option value="loom4-standard">Loom4 Standard</option>
+                            <option value="loom4-fast">Loom4 Fast</option>
+                          </select>
+                        </div>
+                        <button id="projectSendButton" class="send-btn" disabled>
+                          <i class="fas fa-paper-plane"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Project Chat History -->
+              <div class="project-chat-history">
+                <div class="chat-history-header">
+                  <h4>Project Chat History</h4>
+                </div>
+                <div class="chat-history-list" id="projectChatHistoryList">
+                  <div class="chat-history-empty">
+                    <i class="fa-solid fa-message"></i>
+                    <p>No messages yet. Start your first conversation above.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Connect Section -->
@@ -816,6 +947,31 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="cancelFileUploadBtn">Cancel</button>
         <button type="button" class="btn btn-primary" id="uploadFilesBtn" disabled>Upload Files</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions Tooltip Modal -->
+  <div class="tooltip-modal" id="instructionsTooltipModal">
+    <div class="tooltip-modal-content">
+      <div class="tooltip-modal-header">
+        <h3>Project Instructions</h3>
+        <button class="tooltip-modal-close" id="instructionsTooltipClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="tooltip-modal-body">
+        <p>Project instructions serve as a system prompt that guides Claude's behavior throughout all conversations in this project.</p>
+        <ul>
+          <li>Define the role or persona Claude should adopt</li>
+          <li>Set specific guidelines for responses</li>
+          <li>Specify formatting preferences</li>
+          <li>Include context about your project goals</li>
+        </ul>
+        <div class="tooltip-example">
+          <strong>Example:</strong>
+          <p><em>"You are a senior software engineer helping with a React project. Always provide code examples, explain your reasoning, and suggest best practices. Focus on clean, maintainable code."</em></p>
+        </div>
       </div>
     </div>
   </div>
