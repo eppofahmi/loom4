@@ -38,8 +38,8 @@
           </div>
 
           <div class="menu-item nav-item" data-section="connect">
-            <i class="menu-icon fas fa-plug"></i>
-            <span class="menu-text">Connect</span>
+            <i class="menu-icon fas fa-book"></i>
+            <span class="menu-text">Knowledge</span>
           </div>
 
           <div class="menu-item nav-item" data-section="artifacts">
@@ -163,6 +163,113 @@
             </div>
             <div class="connect-view-all" id="connectViewAll" style="display: none;">
               <button class="view-all-btn" id="connectViewAllBtn">View All</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Knowledge Page -->
+        <div class="add-knowledge-page" id="addKnowledgePage" style="display: none;">
+          <div class="add-knowledge-container">
+            <!-- Page Header -->
+            <div class="add-knowledge-header">
+              <div class="add-knowledge-back">
+                <button class="back-btn" id="backToKnowledgeBtn">
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Back to Knowledge Base
+                </button>
+              </div>
+              <div class="add-knowledge-title">
+                <h1>Add Knowledge Source</h1>
+                <p class="add-knowledge-subtitle">Choose how you'd like to connect your data to Loom4</p>
+              </div>
+            </div>
+
+            <!-- Connection Method Cards -->
+            <div class="connection-methods-grid">
+              <!-- Database Connection -->
+              <div class="connection-method-card" data-method="database">
+                <div class="method-card-icon">
+                  <i class="fa-solid fa-database"></i>
+                </div>
+                <div class="method-card-content">
+                  <h3>Connect to Database</h3>
+                  <p>Connect to your SQL database to query and analyze data directly.</p>
+                </div>
+                <div class="method-card-footer">
+                  <button class="connect-btn" data-method="database">
+                    <i class="fa-solid fa-plug"></i>
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- Google Drive Connection -->
+              <div class="connection-method-card" data-method="google-drive">
+                <div class="method-card-icon">
+                  <i class="fa-brands fa-google-drive"></i>
+                </div>
+                <div class="method-card-content">
+                  <h3>Connect to Google Drive</h3>
+                  <p>Access and sync documents, spreadsheets, and files from your Google Drive.</p>
+                </div>
+                <div class="method-card-footer">
+                  <button class="connect-btn" data-method="google-drive">
+                    <i class="fa-solid fa-plug"></i>
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- API Connection -->
+              <div class="connection-method-card" data-method="api">
+                <div class="method-card-icon">
+                  <i class="fa-solid fa-code"></i>
+                </div>
+                <div class="method-card-content">
+                  <h3>Connect via API</h3>
+                  <p>Integrate with external APIs to access real-time data and services.</p>
+                </div>
+                <div class="method-card-footer">
+                  <button class="connect-btn" data-method="api">
+                    <i class="fa-solid fa-plug"></i>
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- URL Connection -->
+              <div class="connection-method-card" data-method="url">
+                <div class="method-card-icon">
+                  <i class="fa-solid fa-link"></i>
+                </div>
+                <div class="method-card-content">
+                  <h3>Add via URL</h3>
+                  <p>Import content from web pages, documentation, or online resources.</p>
+                </div>
+                <div class="method-card-footer">
+                  <button class="connect-btn" data-method="url">
+                    <i class="fa-solid fa-plug"></i>
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- File Upload -->
+              <div class="connection-method-card" data-method="file-upload">
+                <div class="method-card-icon">
+                  <i class="fa-solid fa-upload"></i>
+                </div>
+                <div class="method-card-content">
+                  <h3>Upload a File</h3>
+                  <p>Upload documents, PDFs, text files, or other supported file formats.</p>
+                </div>
+                <div class="method-card-footer">
+                  <button class="connect-btn" data-method="file-upload">
+                    <i class="fa-solid fa-plug"></i>
+                    Connect
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -500,6 +607,217 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Database Connection Modal -->
+  <div class="modal-overlay" id="databaseModalOverlay">
+    <div class="modal-content database-modal">
+      <div class="modal-header">
+        <h2>Connect to Database</h2>
+        <button class="modal-close" id="databaseModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="databaseConnectionForm">
+          <div class="form-group">
+            <label for="dbType">Database Type</label>
+            <select id="dbType" class="form-input" required>
+              <option value="">Select database type...</option>
+              <option value="mysql">MySQL</option>
+              <option value="postgresql">PostgreSQL</option>
+              <option value="sqlite">SQLite</option>
+              <option value="mongodb">MongoDB</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="dbHost">Host</label>
+            <input type="text" id="dbHost" class="form-input" placeholder="localhost" required>
+          </div>
+          <div class="form-group">
+            <label for="dbPort">Port</label>
+            <input type="number" id="dbPort" class="form-input" placeholder="3306" required>
+          </div>
+          <div class="form-group">
+            <label for="dbName">Database Name</label>
+            <input type="text" id="dbName" class="form-input" placeholder="my_database" required>
+          </div>
+          <div class="form-group">
+            <label for="dbUsername">Username</label>
+            <input type="text" id="dbUsername" class="form-input" placeholder="username" required>
+          </div>
+          <div class="form-group">
+            <label for="dbPassword">Password</label>
+            <input type="password" id="dbPassword" class="form-input" placeholder="password" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelDatabaseBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="connectDatabaseBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google Drive Connection Modal -->
+  <div class="modal-overlay" id="googleDriveModalOverlay">
+    <div class="modal-content google-drive-modal">
+      <div class="modal-header">
+        <h2>Connect to Google Drive</h2>
+        <button class="modal-close" id="googleDriveModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="oauth-info">
+          <div class="oauth-icon">
+            <i class="fa-brands fa-google"></i>
+          </div>
+          <h3>Authorize Loom4 to access your Google Drive</h3>
+          <p>This will allow Loom4 to read and sync files from your Google Drive account.</p>
+          <div class="permissions-list">
+            <h4>Permissions requested:</h4>
+            <ul>
+              <li>View and download your Google Drive files</li>
+              <li>View metadata of your files</li>
+              <li>Access shared files and folders</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelGoogleDriveBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="authorizeGoogleDriveBtn">
+          <i class="fa-brands fa-google"></i>
+          Authorize with Google
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Connection Modal -->
+  <div class="modal-overlay" id="apiModalOverlay">
+    <div class="modal-content api-modal">
+      <div class="modal-header">
+        <h2>Connect via API</h2>
+        <button class="modal-close" id="apiModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="apiConnectionForm">
+          <div class="form-group">
+            <label for="apiName">API Name</label>
+            <input type="text" id="apiName" class="form-input" placeholder="My API" required>
+          </div>
+          <div class="form-group">
+            <label for="apiEndpoint">API Endpoint</label>
+            <input type="url" id="apiEndpoint" class="form-input" placeholder="https://api.example.com/v1" required>
+          </div>
+          <div class="form-group">
+            <label for="apiAuthType">Authentication Type</label>
+            <select id="apiAuthType" class="form-input" required>
+              <option value="">Select authentication...</option>
+              <option value="api-key">API Key</option>
+              <option value="bearer-token">Bearer Token</option>
+              <option value="basic-auth">Basic Auth</option>
+              <option value="oauth2">OAuth 2.0</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="apiKey">API Key / Token</label>
+            <input type="password" id="apiKey" class="form-input" placeholder="Enter your API key or token" required>
+          </div>
+          <div class="form-group">
+            <label for="apiHeaders">Custom Headers (Optional)</label>
+            <textarea id="apiHeaders" class="form-input" placeholder='{"Content-Type": "application/json"}' rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelApiBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="connectApiBtn">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- URL Connection Modal -->
+  <div class="modal-overlay" id="urlModalOverlay">
+    <div class="modal-content url-modal">
+      <div class="modal-header">
+        <h2>Add via URL</h2>
+        <button class="modal-close" id="urlModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="urlConnectionForm">
+          <div class="form-group">
+            <label for="urlInput">URL</label>
+            <input type="url" id="urlInput" class="form-input" placeholder="https://example.com/documentation" required>
+          </div>
+          <div class="form-group">
+            <label for="urlName">Name (Optional)</label>
+            <input type="text" id="urlName" class="form-input" placeholder="Documentation Site">
+          </div>
+          <div class="form-group">
+            <label for="urlDescription">Description (Optional)</label>
+            <textarea id="urlDescription" class="form-input" placeholder="Brief description of the content..." rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="crawlSubpages" checked>
+              <label for="crawlSubpages">Crawl linked pages</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelUrlBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="connectUrlBtn">Add URL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Upload Modal -->
+  <div class="modal-overlay" id="fileUploadModalOverlay">
+    <div class="modal-content file-upload-modal">
+      <div class="modal-header">
+        <h2>Upload a File</h2>
+        <button class="modal-close" id="fileUploadModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="fileUploadForm">
+          <div class="form-group">
+            <label for="fileInput">Select Files</label>
+            <div class="file-upload-area" id="fileUploadArea">
+              <div class="file-upload-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div class="file-upload-text">
+                <p>Click to select files or drag and drop</p>
+                <p class="file-upload-hint">Supports PDF, DOC, DOCX, TXT, MD, and more</p>
+              </div>
+              <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.doc,.docx,.txt,.md,.csv,.json,.xml">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="fileDescription">Description (Optional)</label>
+            <textarea id="fileDescription" class="form-input" placeholder="Brief description of the uploaded files..." rows="3"></textarea>
+          </div>
+          <div class="selected-files" id="selectedFiles" style="display: none;">
+            <h4>Selected Files:</h4>
+            <div class="file-list" id="fileList"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelFileUploadBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="uploadFilesBtn" disabled>Upload Files</button>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>

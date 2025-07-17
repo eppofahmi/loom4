@@ -1021,6 +1021,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (connectSearchInput) {
         connectSearchInput.value = '';
       }
+      // Ensure Add Knowledge page is hidden when entering connect section
+      hideAddKnowledgePage();
     }
   }
 
@@ -1741,6 +1743,292 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Add Knowledge page functions
+  function showAddKnowledgePage() {
+    const connectPageContainer = document.querySelector('.connect-page-container');
+    const addKnowledgePage = document.getElementById('addKnowledgePage');
+    
+    if (connectPageContainer && addKnowledgePage) {
+      connectPageContainer.style.display = 'none';
+      addKnowledgePage.style.display = 'block';
+    }
+  }
+
+  function hideAddKnowledgePage() {
+    const connectPageContainer = document.querySelector('.connect-page-container');
+    const addKnowledgePage = document.getElementById('addKnowledgePage');
+    
+    if (connectPageContainer && addKnowledgePage) {
+      connectPageContainer.style.display = 'block';
+      addKnowledgePage.style.display = 'none';
+    }
+  }
+
+  // Modal management functions
+  function openModal(modalId) {
+    // Close any currently open modals
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.classList.remove('active');
+    });
+    
+    // Open the requested modal
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  function closeAllModals() {
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.classList.remove('active');
+    });
+    document.body.style.overflow = 'auto';
+  }
+
+  // Connection method handlers
+  function handleConnectionMethod(method) {
+    const modalMap = {
+      'database': 'databaseModalOverlay',
+      'google-drive': 'googleDriveModalOverlay',
+      'api': 'apiModalOverlay',
+      'url': 'urlModalOverlay',
+      'file-upload': 'fileUploadModalOverlay'
+    };
+
+    const modalId = modalMap[method];
+    if (modalId) {
+      openModal(modalId);
+    }
+  }
+
+  // Setup connection method card listeners
+  function setupConnectionMethodCards() {
+    document.querySelectorAll('.connect-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const method = e.target.dataset.method || e.target.closest('.connect-btn').dataset.method;
+        handleConnectionMethod(method);
+      });
+    });
+  }
+
+  // Setup modal event listeners
+  function setupModalEventListeners() {
+    // Database modal
+    const databaseModalClose = document.getElementById('databaseModalClose');
+    const cancelDatabaseBtn = document.getElementById('cancelDatabaseBtn');
+    const connectDatabaseBtn = document.getElementById('connectDatabaseBtn');
+    
+    if (databaseModalClose) {
+      databaseModalClose.addEventListener('click', () => closeModal('databaseModalOverlay'));
+    }
+    if (cancelDatabaseBtn) {
+      cancelDatabaseBtn.addEventListener('click', () => closeModal('databaseModalOverlay'));
+    }
+    if (connectDatabaseBtn) {
+      connectDatabaseBtn.addEventListener('click', () => handleDatabaseConnection());
+    }
+
+    // Google Drive modal
+    const googleDriveModalClose = document.getElementById('googleDriveModalClose');
+    const cancelGoogleDriveBtn = document.getElementById('cancelGoogleDriveBtn');
+    const authorizeGoogleDriveBtn = document.getElementById('authorizeGoogleDriveBtn');
+    
+    if (googleDriveModalClose) {
+      googleDriveModalClose.addEventListener('click', () => closeModal('googleDriveModalOverlay'));
+    }
+    if (cancelGoogleDriveBtn) {
+      cancelGoogleDriveBtn.addEventListener('click', () => closeModal('googleDriveModalOverlay'));
+    }
+    if (authorizeGoogleDriveBtn) {
+      authorizeGoogleDriveBtn.addEventListener('click', () => handleGoogleDriveConnection());
+    }
+
+    // API modal
+    const apiModalClose = document.getElementById('apiModalClose');
+    const cancelApiBtn = document.getElementById('cancelApiBtn');
+    const connectApiBtn = document.getElementById('connectApiBtn');
+    
+    if (apiModalClose) {
+      apiModalClose.addEventListener('click', () => closeModal('apiModalOverlay'));
+    }
+    if (cancelApiBtn) {
+      cancelApiBtn.addEventListener('click', () => closeModal('apiModalOverlay'));
+    }
+    if (connectApiBtn) {
+      connectApiBtn.addEventListener('click', () => handleApiConnection());
+    }
+
+    // URL modal
+    const urlModalClose = document.getElementById('urlModalClose');
+    const cancelUrlBtn = document.getElementById('cancelUrlBtn');
+    const connectUrlBtn = document.getElementById('connectUrlBtn');
+    
+    if (urlModalClose) {
+      urlModalClose.addEventListener('click', () => closeModal('urlModalOverlay'));
+    }
+    if (cancelUrlBtn) {
+      cancelUrlBtn.addEventListener('click', () => closeModal('urlModalOverlay'));
+    }
+    if (connectUrlBtn) {
+      connectUrlBtn.addEventListener('click', () => handleUrlConnection());
+    }
+
+    // File Upload modal
+    const fileUploadModalClose = document.getElementById('fileUploadModalClose');
+    const cancelFileUploadBtn = document.getElementById('cancelFileUploadBtn');
+    const uploadFilesBtn = document.getElementById('uploadFilesBtn');
+    
+    if (fileUploadModalClose) {
+      fileUploadModalClose.addEventListener('click', () => closeModal('fileUploadModalOverlay'));
+    }
+    if (cancelFileUploadBtn) {
+      cancelFileUploadBtn.addEventListener('click', () => closeModal('fileUploadModalOverlay'));
+    }
+    if (uploadFilesBtn) {
+      uploadFilesBtn.addEventListener('click', () => handleFileUpload());
+    }
+
+    // File upload area interaction
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    if (fileUploadArea && fileInput) {
+      fileUploadArea.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', handleFileSelection);
+      
+      // Drag and drop functionality
+      fileUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.add('drag-over');
+      });
+      
+      fileUploadArea.addEventListener('dragleave', () => {
+        fileUploadArea.classList.remove('drag-over');
+      });
+      
+      fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.remove('drag-over');
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelection();
+      });
+    }
+
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    });
+  }
+
+  // Connection handlers
+  function handleDatabaseConnection() {
+    const form = document.getElementById('databaseConnectionForm');
+    const formData = new FormData(form);
+    
+    // Simulate connection
+    setTimeout(() => {
+      alert('Database connection established successfully!');
+      closeModal('databaseModalOverlay');
+      hideAddKnowledgePage();
+      renderKnowledgeSources();
+    }, 1000);
+  }
+
+  function handleGoogleDriveConnection() {
+    // Simulate OAuth flow
+    setTimeout(() => {
+      alert('Google Drive authorization successful!');
+      closeModal('googleDriveModalOverlay');
+      hideAddKnowledgePage();
+      renderKnowledgeSources();
+    }, 1000);
+  }
+
+  function handleApiConnection() {
+    const form = document.getElementById('apiConnectionForm');
+    const formData = new FormData(form);
+    
+    // Simulate API connection
+    setTimeout(() => {
+      alert('API connection established successfully!');
+      closeModal('apiModalOverlay');
+      hideAddKnowledgePage();
+      renderKnowledgeSources();
+    }, 1000);
+  }
+
+  function handleUrlConnection() {
+    const form = document.getElementById('urlConnectionForm');
+    const formData = new FormData(form);
+    
+    // Simulate URL processing
+    setTimeout(() => {
+      alert('URL content imported successfully!');
+      closeModal('urlModalOverlay');
+      hideAddKnowledgePage();
+      renderKnowledgeSources();
+    }, 1000);
+  }
+
+  function handleFileUpload() {
+    const fileInput = document.getElementById('fileInput');
+    const files = fileInput.files;
+    
+    if (files.length === 0) {
+      alert('Please select files to upload.');
+      return;
+    }
+    
+    // Simulate file upload
+    setTimeout(() => {
+      alert(`${files.length} file(s) uploaded successfully!`);
+      closeModal('fileUploadModalOverlay');
+      hideAddKnowledgePage();
+      renderKnowledgeSources();
+    }, 1000);
+  }
+
+  function handleFileSelection() {
+    const fileInput = document.getElementById('fileInput');
+    const selectedFiles = document.getElementById('selectedFiles');
+    const fileList = document.getElementById('fileList');
+    const uploadFilesBtn = document.getElementById('uploadFilesBtn');
+    
+    if (fileInput.files.length > 0) {
+      selectedFiles.style.display = 'block';
+      fileList.innerHTML = '';
+      
+      Array.from(fileInput.files).forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <i class="fa-solid fa-file"></i>
+          <span>${file.name}</span>
+          <span class="file-size">${(file.size / 1024).toFixed(1)} KB</span>
+        `;
+        fileList.appendChild(fileItem);
+      });
+      
+      uploadFilesBtn.disabled = false;
+    } else {
+      selectedFiles.style.display = 'none';
+      uploadFilesBtn.disabled = true;
+    }
+  }
+
   // Initialize the app
   function init() {
     renderChatHistory();
@@ -1748,6 +2036,8 @@ document.addEventListener("DOMContentLoaded", function () {
     renderArtifacts();
     renderKnowledgeSources();
     setupEventListeners();
+    setupConnectionMethodCards();
+    setupModalEventListeners();
     loadSavedData();
     showSection('chat');
     
@@ -2154,7 +2444,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const addKnowledgeBtn = document.getElementById('addKnowledgeBtn');
     if (addKnowledgeBtn) {
       addKnowledgeBtn.addEventListener('click', () => {
-        alert('Add Knowledge functionality coming soon!');
+        showAddKnowledgePage();
+      });
+    }
+
+    // Back to Knowledge Base button
+    const backToKnowledgeBtn = document.getElementById('backToKnowledgeBtn');
+    if (backToKnowledgeBtn) {
+      backToKnowledgeBtn.addEventListener('click', () => {
+        hideAddKnowledgePage();
       });
     }
 
