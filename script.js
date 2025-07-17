@@ -958,7 +958,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Show specific section and update navigation
   function showSection(sectionName) {
+    const previousSection = currentSection;
     currentSection = sectionName;
+
+    // Clean up chat-specific UI state when leaving chat section
+    if (previousSection === 'chat' && sectionName !== 'chat') {
+      cleanupChatState();
+    }
 
     // Hide all content sections
     document.querySelectorAll('.content-section').forEach(section => {
@@ -1015,9 +1021,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (connectSearchInput) {
         connectSearchInput.value = '';
       }
-    } else {
-      // Clean up chat-specific UI state when leaving chat section
-      cleanupChatState();
     }
   }
 
@@ -1044,7 +1047,10 @@ document.addEventListener("DOMContentLoaded", function () {
     
     if (chatListPanel && chatContainer) {
       chatListPanel.classList.remove('active');
-      chatContainer.style.display = 'flex';
+      // Only show chat container if we're in chat section
+      if (currentSection === 'chat') {
+        chatContainer.style.display = 'flex';
+      }
     }
   }
 
@@ -1689,6 +1695,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (chatContainer) {
       chatContainer.classList.remove('split-view');
+      chatContainer.style.display = 'none'; // Hide chat container
     }
     if (artifactViewer) {
       artifactViewer.classList.remove('active');
@@ -1700,9 +1707,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hide chat list panel
     hideChatListPanel();
     
-    // Reset artifact viewer state
+    // Reset chat-specific state variables
     isArtifactViewerOpen = false;
     artifactViewerWidth = 50;
+    showChatList = false;
+    
+    // Clear any selected chat IDs
+    selectedChatIds.clear();
     
     // Reset widths to original state
     if (chatContainer) {
@@ -1721,6 +1732,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (expandArtifactBtn) {
       expandArtifactBtn.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
       expandArtifactBtn.title = 'Expand Artifact Viewer';
+    }
+    
+    // Hide any open modal overlays related to chat
+    if (shareModalOverlay) {
+      shareModalOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
     }
   }
 
