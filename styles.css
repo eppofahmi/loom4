@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow: hidden;
+}
+
 body {
   font-family: "Söhne", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif;
   background-color: #f7f7f8;
@@ -294,7 +298,7 @@ body {
   flex-direction: column;
   background: #ffffff;
   position: relative;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* Split view modification */
@@ -3045,24 +3049,18 @@ body {
   transform: scale(0.98);
 }
 
-/* Connect Container */
-.connect-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: visible;
-  padding: 24px 40px 40px;
-  position: relative;
-}
-
 /* Connect Items List */
 .connect-items-list {
   width: 100%;
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: visible;
   scroll-behavior: smooth;
   min-height: 0;
+  max-height: calc(100vh - 200px);
   margin-bottom: 0;
+  padding: 24px 40px 40px;
+  position: relative;
 }
 
 /* Connect List Item (chat-style) */
@@ -3212,8 +3210,11 @@ body {
 .connect-view-all {
   display: flex;
   justify-content: center;
-  padding-top: 24px;
+  padding: 24px 0;
   margin-top: 16px;
+  border-top: 1px solid #f1f5f9;
+  background: #fafbfc;
+  border-radius: 0 0 8px 8px;
 }
 
 /* ===== PROJECTS PAGE STYLES ===== */
@@ -3346,6 +3347,8 @@ body {
   overflow-x: visible;
   padding: 24px 40px 40px;
   position: relative;
+  max-height: calc(100vh - 200px);
+  min-height: 0;
 }
 
 .projects-grid {
@@ -4852,5 +4855,37 @@ body {
   font-size: 14px;
   color: #374151;
   line-height: 1.4;
+}
+
+/* Project Indicator Styles */
+.project-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.project-indicator i {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
