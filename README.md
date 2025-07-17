@@ -98,6 +98,162 @@ You can change the application theme:
 - No backend integration (all processing happens client-side)
 - Mobile experience could be improved
 
+## API Endpoints (For Future Backend Integration)
+
+The application is designed to support the following API endpoints when a backend is implemented:
+
+### Authentication
+- `POST /api/auth/login` - User authentication
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/register` - User registration
+- `GET /api/auth/profile` - Get user profile
+
+### Projects
+- `GET /api/projects` - List all projects
+- `POST /api/projects` - Create new project
+- `GET /api/projects/:id` - Get project details
+- `PUT /api/projects/:id` - Update project
+- `DELETE /api/projects/:id` - Delete project
+- `POST /api/projects/:id/chat` - Send chat message for project
+
+### Knowledge Sources
+- `GET /api/knowledge` - List all knowledge sources
+- `POST /api/knowledge` - Add new knowledge source
+- `GET /api/knowledge/:id` - Get knowledge source details
+- `PUT /api/knowledge/:id` - Update knowledge source
+- `DELETE /api/knowledge/:id` - Remove knowledge source
+- `POST /api/knowledge/sync` - Sync knowledge sources
+
+### Chat
+- `GET /api/chats` - List all chats
+- `POST /api/chats` - Create new chat
+- `GET /api/chats/:id` - Get chat details
+- `POST /api/chats/:id/messages` - Send message
+- `GET /api/chats/:id/messages` - Get chat messages
+
+### Artifacts
+- `GET /api/artifacts` - List all artifacts
+- `POST /api/artifacts` - Create artifact
+- `GET /api/artifacts/:id` - Get artifact details
+- `PUT /api/artifacts/:id` - Update artifact
+- `DELETE /api/artifacts/:id` - Delete artifact
+
+## NoSQL Database Collections
+
+The application uses the following data structures that would be stored in NoSQL collections:
+
+### Users Collection
+```javascript
+{
+  _id: ObjectId,
+  email: String,
+  password: String (hashed),
+  name: String,
+  avatar: String,
+  settings: {
+    theme: String, // "light", "dark", "system"
+    notifications: Boolean
+  },
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Projects Collection
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  title: String,
+  description: String,
+  status: String, // "active", "planned", "completed"
+  lastActive: Date,
+  members: Number,
+  tasks: Number,
+  completion: Number, // percentage
+  knowledgeBaseId: ObjectId,
+  instructions: String,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Knowledge Sources Collection
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  title: String,
+  type: String, // "file", "web", "database", "api"
+  description: String,
+  lastUpdated: Date,
+  status: String, // "connected", "pending", "error"
+  sourceInfo: String,
+  connectionConfig: {
+    url: String,
+    credentials: Object,
+    metadata: Object
+  },
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Chats Collection
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  projectId: ObjectId,
+  title: String,
+  lastMessage: String,
+  timestamp: Date,
+  messages: [{
+    id: String,
+    role: String, // "user", "assistant"
+    content: String,
+    timestamp: Date,
+    artifacts: [ObjectId]
+  }],
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Artifacts Collection
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  chatId: ObjectId,
+  title: String,
+  type: String, // "code", "document", "image", "data"
+  content: String,
+  language: String, // for code artifacts
+  metadata: {
+    size: Number,
+    lines: Number,
+    tags: [String]
+  },
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Knowledge Base Collection
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId,
+  name: String,
+  description: String,
+  sources: [ObjectId], // references to Knowledge Sources
+  vectorIndex: String, // for AI search
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
 ## Future Enhancements
 - Add backend integration for larger data storage
 - Implement user authentication
